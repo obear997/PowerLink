@@ -27,8 +27,8 @@ public record HardlinkGroupViewModel
 
     public string Header =>
         LinksOutsideScan == 0
-            ? $"{TotalHardLinkCount} links"
-            : $"{TotalHardLinkCount} links total ({LinksInScan} here, {LinksOutsideScan} elsewhere)";
+            ? $"{TotalHardLinkCount} 个链接"
+            : $"共 {TotalHardLinkCount} 个链接（此处 {LinksInScan} 个，其他位置 {LinksOutsideScan} 个）";
 
     public Visibility ElsewhereListVisibility =>
         PathsElsewhere.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
@@ -36,7 +36,7 @@ public record HardlinkGroupViewModel
     public static HardlinkGroupViewModel FromRecords(IReadOnlyList<FileRecord> records)
     {
         ArgumentNullException.ThrowIfNull(records);
-        if (records.Count == 0) throw new ArgumentException("At least one record required.", nameof(records));
+        if (records.Count == 0) throw new ArgumentException("至少需要一条记录。", nameof(records));
 
         var pathsInScan = records.Select(r => r.FullPath).ToList();
         var pathsElsewhere = Array.Empty<string>() as IReadOnlyList<string>;

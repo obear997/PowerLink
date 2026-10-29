@@ -32,31 +32,31 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Text="Deduplicate" Style="{ThemeResource TitleTextBlockStyle}"/>
+        <TextBlock Grid.Row="0" Text="去重" Style="{ThemeResource TitleTextBlockStyle}"/>
         <TextBlock Grid.Row="1" TextWrapping="Wrap" Opacity="0.7"
-                   Text="Find identical files and replace duplicates with NTFS hardlinks — every path keeps working, but the data exists only once on disk. Not a copy, not a symlink."/>
+                   Text="找出内容完全相同的文件，并用 NTFS 硬链接替换重复项 —— 每个路径都照常可用，但数据在磁盘上只存一份。不是复制，也不是符号链接。"/>
 
         <InfoBar Grid.Row="2" IsOpen="True" IsClosable="False" Severity="Informational"
-                 Title="What's a hardlink?"
-                 Message="One file on disk with multiple names. Opens normally from every path. Delete one path — the data stays until the last name is gone. Works only within a single NTFS volume."/>
+                 Title="什么是硬链接？"
+                 Message="硬链接是磁盘上同一份文件拥有多个名字。从任何路径打开都正常。删除其中一个路径后，数据会保留到最后一个名字也消失为止。只能在同一 NTFS 卷内工作。"/>
 
         <Grid Grid.Row="3" ColumnSpacing="8">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <TextBlock VerticalAlignment="Center" Text="Folders to scan" Style="{ThemeResource SubtitleTextBlockStyle}"/>
+            <TextBlock VerticalAlignment="Center" Text="待扫描文件夹" Style="{ThemeResource SubtitleTextBlockStyle}"/>
             <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
                 <Button Command="{x:Bind ViewModel.AddFolderCommand}">
                     <StackPanel Orientation="Horizontal" Spacing="6">
                         <SymbolIcon Symbol="Add"/>
-                        <TextBlock Text="Add folder"/>
+                        <TextBlock Text="添加文件夹"/>
                     </StackPanel>
                 </Button>
                 <Button Command="{x:Bind ViewModel.ClearFoldersCommand}">
                     <StackPanel Orientation="Horizontal" Spacing="6">
                         <SymbolIcon Symbol="Clear"/>
-                        <TextBlock Text="Clear"/>
+                        <TextBlock Text="清空"/>
                     </StackPanel>
                 </Button>
             </StackPanel>
@@ -94,7 +94,7 @@
             </Grid.RowDefinitions>
 
             <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
-                <TextBlock VerticalAlignment="Center" Text="Min file size:"/>
+                <TextBlock VerticalAlignment="Center" Text="最小文件大小："/>
                 <NumberBox Value="{x:Bind ViewModel.MinSizeMiB, Mode=TwoWay}"
                            Minimum="0" Maximum="1048576"
                            SmallChange="1" LargeChange="10"
@@ -107,7 +107,7 @@
                 </NumberBox>
                 <TextBlock VerticalAlignment="Center" Text="MiB"/>
 
-                <TextBlock VerticalAlignment="Center" Margin="24,0,0,0" Text="Hash buffer:"/>
+                <TextBlock VerticalAlignment="Center" Margin="24,0,0,0" Text="哈希缓冲区："/>
                 <Slider Value="{x:Bind ViewModel.BufferSizeLog2, Mode=TwoWay}"
                         Minimum="6" Maximum="14"
                         StepFrequency="1" SnapsTo="StepValues"
@@ -124,13 +124,13 @@
                         Style="{ThemeResource AccentButtonStyle}">
                     <StackPanel Orientation="Horizontal" Spacing="6">
                         <SymbolIcon Symbol="Find"/>
-                        <TextBlock Text="Scan"/>
+                        <TextBlock Text="扫描"/>
                     </StackPanel>
                 </Button>
                 <Button Command="{x:Bind ViewModel.CancelCommand}">
                     <StackPanel Orientation="Horizontal" Spacing="6">
                         <SymbolIcon Symbol="Cancel"/>
-                        <TextBlock Text="Stop"/>
+                        <TextBlock Text="停止"/>
                     </StackPanel>
                 </Button>
             </StackPanel>
@@ -176,7 +176,7 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" Style="{ThemeResource SubtitleTextBlockStyle}" Text="Duplicate groups"/>
+            <TextBlock Grid.Row="0" Style="{ThemeResource SubtitleTextBlockStyle}" Text="重复分组"/>
 
             <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
                 <ItemsControl ItemsSource="{x:Bind ViewModel.Groups, Mode=OneWay}">
@@ -187,15 +187,15 @@
                                 <StackPanel Spacing="4">
                                     <StackPanel Orientation="Horizontal" Spacing="6">
                                         <TextBlock FontWeight="SemiBold" Text="{x:Bind FileCount}"/>
-                                        <TextBlock FontWeight="SemiBold" Text=" files &#x00D7; "/>
+                                        <TextBlock FontWeight="SemiBold" Text=" 个文件 × "/>
                                         <TextBlock FontWeight="SemiBold"
                                                    Text="{x:Bind FileSize, Converter={StaticResource BytesToHuman}}"/>
-                                        <TextBlock FontWeight="SemiBold" Text=" &#x2014; saves "/>
+                                        <TextBlock FontWeight="SemiBold" Text=" — 可节省 "/>
                                         <TextBlock FontWeight="SemiBold" Foreground="{ThemeResource SystemAccentColor}"
                                                    Text="{x:Bind WastedBytes, Converter={StaticResource BytesToHuman}}"/>
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal" Spacing="6">
-                                        <TextBlock FontWeight="SemiBold" Text="keep:"/>
+                                        <TextBlock FontWeight="SemiBold" Text="保留："/>
                                         <TextBlock Opacity="0.85" Text="{x:Bind CanonicalPath}"
                                                    TextTrimming="CharacterEllipsis"/>
                                     </StackPanel>
@@ -220,16 +220,16 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <CheckBox Grid.Column="0"
-                          Content="Re-verify file contents before deleting"
+                          Content="删除前重新校验文件内容"
                           IsChecked="{x:Bind ViewModel.AlwaysVerifyContent, Mode=TwoWay}"
                           VerticalAlignment="Center"
-                          ToolTipService.ToolTip="Forces a full re-hash of both files in every action, even when mtime looks unchanged. Default is off — the tiered verify already re-hashes whenever mtime drifted from the scan. Tick this if you don't trust mtime (e.g. some sync tools restore it after writing)."/>
+                          ToolTipService.ToolTip="强制在每次操作时对两个文件完整重新哈希，即使 mtime 看起来没变。默认关闭 —— 分级校验在 mtime 与扫描时不一致时已经会重新哈希。如果你不信任 mtime（例如某些同步工具在写入后恢复了它），请勾选此项。"/>
                 <Button Grid.Column="1"
                         Command="{x:Bind ViewModel.ExecuteDedupCommand}"
                         Style="{ThemeResource AccentButtonStyle}">
                     <StackPanel Orientation="Horizontal" Spacing="6">
                         <SymbolIcon Symbol="Accept"/>
-                        <TextBlock Text="Replace duplicates with hardlinks"/>
+                        <TextBlock Text="用硬链接替换重复文件"/>
                     </StackPanel>
                 </Button>
             </Grid>

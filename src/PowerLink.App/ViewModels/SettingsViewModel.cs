@@ -68,8 +68,8 @@ public partial class SettingsViewModel : ObservableObject
     public partial bool IsVelopackInstalled { get; set; }
 
     public string UpdateModeText => IsVelopackInstalled
-        ? "Auto-updates enabled."
-        : "Dev build — auto-update disabled. Use the Releases page to grab a real build.";
+        ? "已启用自动更新。"
+        : "开发构建 —— 自动更新已禁用。请从 Releases 页面获取正式版本。";
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(CheckForUpdatesCommand))]
@@ -133,7 +133,7 @@ public partial class SettingsViewModel : ObservableObject
         HasPicked = picked is not null;
         PickedPathText = picked is null
             ? null
-            : $"{(picked.IsDirectory ? "Folder" : "File")}: {picked.Path}\nPicked at: {picked.PickedAtUtc.ToLocalTime():g}";
+            : $"{(picked.IsDirectory ? "文件夹" : "文件")}：{picked.Path}\n选取时间：{picked.PickedAtUtc.ToLocalTime():g}";
     }
 
     /// <summary>
@@ -181,16 +181,16 @@ public partial class SettingsViewModel : ObservableObject
             var layoutChanged = oldLayout != newLayout;
             OperationStatus = (installing, uninstalling, layoutChanged) switch
             {
-                (0, 0, false) => "No changes.",
-                (0, 0, true)  => $"Layout switched to {newLayout}. Restart Explorer to apply.",
-                (_, 0, _)     => $"Installed {installing} verb(s). Restart Explorer to see them.",
-                (0, _, _)     => $"Uninstalled {uninstalling} verb(s). Restart Explorer to apply.",
-                _             => $"Installed {installing}, uninstalled {uninstalling}. Restart Explorer to apply.",
+                (0, 0, false) => "无更改。",
+                (0, 0, true)  => $"布局已切换为 {newLayout}。重启资源管理器以生效。",
+                (_, 0, _)     => $"已安装 {installing} 个动作。重启资源管理器以查看。",
+                (0, _, _)     => $"已卸载 {uninstalling} 个动作。重启资源管理器以生效。",
+                _             => $"已安装 {installing} 个，卸载 {uninstalling} 个。重启资源管理器以生效。",
             };
         }
         catch (Exception ex)
         {
-            OperationStatus = $"Apply failed: {ex.Message}";
+            OperationStatus = $"应用失败：{ex.Message}";
         }
     }
 
@@ -201,11 +201,11 @@ public partial class SettingsViewModel : ObservableObject
         {
             ShellExtensionService.UninstallAll();
             Refresh();
-            OperationStatus = "All verbs uninstalled. Restart Explorer to apply.";
+            OperationStatus = "已卸载全部动作。重启资源管理器以生效。";
         }
         catch (Exception ex)
         {
-            OperationStatus = $"Uninstall failed: {ex.Message}";
+            OperationStatus = $"卸载失败：{ex.Message}";
         }
     }
 
@@ -216,14 +216,14 @@ public partial class SettingsViewModel : ObservableObject
         var uninstall = OverlayVerbs.Any(v => !v.ShouldInstall && v.IsInstalled);
         if (!install && !uninstall)
         {
-            OverlayStatus = "No changes.";
+            OverlayStatus = "无更改。";
             return;
         }
 
         var dllPath = ShellExtensionService.DetectShellExtDllPath();
         if (install && !File.Exists(dllPath))
         {
-            OverlayStatus = $"PowerLink.ShellExt.dll not found at {dllPath}. Build the C++ project first.";
+            OverlayStatus = $"未在 {dllPath} 找到 PowerLink.ShellExt.dll。请先构建 C++ 项目。";
             return;
         }
 
@@ -238,7 +238,7 @@ public partial class SettingsViewModel : ObservableObject
                 var proceed = await ConfirmOverlaySlotWar(handlers);
                 if (!proceed)
                 {
-                    OverlayStatus = "Cancelled — overlay install not attempted.";
+                    OverlayStatus = "已取消 —— 未尝试安装叠加图标。";
                     return;
                 }
             }
@@ -260,31 +260,31 @@ public partial class SettingsViewModel : ObservableObject
             });
             if (process is null)
             {
-                OverlayStatus = "Cancelled.";
+                OverlayStatus = "已取消。";
                 return;
             }
 
             await process.WaitForExitAsync();
             if (process.ExitCode != 0)
             {
-                OverlayStatus = $"Overlay {(install ? "install" : "uninstall")} failed (exit {process.ExitCode}).";
+                OverlayStatus = $"叠加图标{(install ? "安装" : "卸载")}失败（退出码 {process.ExitCode}）。";
                 Refresh();
                 return;
             }
 
             Refresh();
             OverlayStatus = install
-                ? "Overlay installed. Restart Explorer to see the badge."
-                : "Overlay uninstalled. Restart Explorer to remove the badge.";
+                ? "叠加图标已安装。重启资源管理器以查看角标。"
+                : "叠加图标已卸载。重启资源管理器以移除角标。";
         }
         catch (Win32Exception ex) when (ex.NativeErrorCode == ErrorCancelled)
         {
-            OverlayStatus = "Cancelled — overlay handler needs admin permission.";
+            OverlayStatus = "已取消 —— 叠加处理程序需要管理员权限。";
             Refresh();
         }
         catch (Exception ex)
         {
-            OverlayStatus = $"Overlay change failed: {ex.Message}";
+            OverlayStatus = $"叠加图标更改失败：{ex.Message}";
         }
     }
 
@@ -295,7 +295,7 @@ public partial class SettingsViewModel : ObservableObject
         var uninstall = DropVerbs.Any(v => !v.ShouldInstall && v.IsInstalled);
         if (!install && !uninstall)
         {
-            DropStatus = "No changes.";
+            DropStatus = "无更改。";
             return;
         }
 
@@ -310,7 +310,7 @@ public partial class SettingsViewModel : ObservableObject
                     var dllPath = ShellExtensionService.DetectShellExtDllPath();
                     if (!File.Exists(dllPath))
                     {
-                        DropStatus = $"PowerLink.ShellExt.dll not found at {dllPath}. Build the C++ project first.";
+                        DropStatus = $"未在 {dllPath} 找到 PowerLink.ShellExt.dll。请先构建 C++ 项目。";
                         return;
                     }
                     ShellExtensionService.InstallDropHandler(dllPath);
@@ -325,14 +325,14 @@ public partial class SettingsViewModel : ObservableObject
             Refresh();
             DropStatus = (installed, uninstalled) switch
             {
-                (_, 0) => "Drop handler installed. Restart Explorer to activate.",
-                (0, _) => "Drop handler uninstalled. Restart Explorer to detach.",
-                _ => "Applied. Restart Explorer.",
+                (_, 0) => "拖放处理程序已安装。重启资源管理器以激活。",
+                (0, _) => "拖放处理程序已卸载。重启资源管理器以移除。",
+                _ => "已应用。请重启资源管理器。",
             };
         }
         catch (Exception ex)
         {
-            DropStatus = $"Apply failed: {ex.Message}";
+            DropStatus = $"应用失败：{ex.Message}";
         }
     }
 
@@ -343,13 +343,13 @@ public partial class SettingsViewModel : ObservableObject
         var uninstall = ModernVerbs.Any(v => !v.ShouldInstall && v.IsInstalled);
         if (!install && !uninstall)
         {
-            ModernStatus = "No changes.";
+            ModernStatus = "无更改。";
             return;
         }
 
         if (install && !ModernMenuService.IsDeveloperModeEnabled())
         {
-            ModernStatus = "Developer Mode is off. Enable it in Settings → Privacy & security → For developers, then try again. (Unsigned packages need Developer Mode.)";
+            ModernStatus = "开发者模式已关闭。请在 设置 → 隐私和安全性 → 开发者选项 中启用后重试。（未签名包需要开发者模式。）";
             Refresh();
             return;
         }
@@ -360,18 +360,18 @@ public partial class SettingsViewModel : ObservableObject
             {
                 await ModernMenuService.InstallAsync();
                 Refresh();
-                ModernStatus = "Modern menu registered. Restart Explorer and right-click any file/folder to try it.";
+                ModernStatus = "现代菜单已注册。重启资源管理器后右键单击任意文件/文件夹即可试用。";
             }
             else
             {
                 await ModernMenuService.UninstallAsync();
                 Refresh();
-                ModernStatus = "Modern menu unregistered. Restart Explorer to remove the entry.";
+                ModernStatus = "现代菜单已注销。重启资源管理器以移除该条目。";
             }
         }
         catch (Exception ex)
         {
-            ModernStatus = $"Modern menu change failed: {ex.Message}";
+            ModernStatus = $"现代菜单更改失败：{ex.Message}";
             Refresh();
         }
     }
@@ -380,7 +380,7 @@ public partial class SettingsViewModel : ObservableObject
     private async Task CheckForUpdatesAsync()
     {
         IsCheckingForUpdates = true;
-        UpdateStatus = "Checking…";
+        UpdateStatus = "正在检查…";
         IsUpdateAvailable = false;
         try
         {
@@ -388,17 +388,17 @@ public partial class SettingsViewModel : ObservableObject
             switch (result.Availability)
             {
                 case UpdateAvailability.UpToDate:
-                    UpdateStatus = $"Up to date (v{CurrentVersionText}).";
+                    UpdateStatus = $"已是最新版本（v{CurrentVersionText}）。";
                     break;
                 case UpdateAvailability.Available:
                     _pendingUpdate = result.VelopackInfo;
                     IsUpdateAvailable = true;
                     UpdateStatus = IsVelopackInstalled
-                        ? $"Update available: v{result.AvailableVersion}. Click Install to apply."
-                        : $"Update available: v{result.AvailableVersion}. Open the Releases page to grab Setup.exe or Portable.zip.";
+                        ? $"有可用更新：v{result.AvailableVersion}。点击“立即安装”以应用。"
+                        : $"有可用更新：v{result.AvailableVersion}。打开 Releases 页面获取 Setup.exe 或 Portable.zip。";
                     break;
                 case UpdateAvailability.Failed:
-                    UpdateStatus = $"Check failed: {result.ErrorMessage}";
+                    UpdateStatus = $"检查失败：{result.ErrorMessage}";
                     break;
             }
         }
@@ -410,15 +410,15 @@ public partial class SettingsViewModel : ObservableObject
     {
         if (_pendingUpdate is null) return;
         IsInstallingUpdate = true;
-        UpdateStatus = "Downloading and applying… The app will restart.";
+        UpdateStatus = "正在下载并应用… 应用将重启。";
         try
         {
             await _updateService.ApplyAsync(_pendingUpdate);
-            UpdateStatus = "Restart didn't happen — try again or download manually.";
+            UpdateStatus = "重启未发生 —— 请重试或手动下载。";
         }
         catch (Exception ex)
         {
-            UpdateStatus = $"Install failed: {ex.Message}";
+            UpdateStatus = $"安装失败：{ex.Message}";
         }
         finally { IsInstallingUpdate = false; }
     }
@@ -434,10 +434,10 @@ public partial class SettingsViewModel : ObservableObject
     private void RestartExplorer()
     {
         ShellExtensionService.RestartExplorer();
-        OperationStatus = "Explorer restarted.";
-        OverlayStatus = "Explorer restarted.";
-        DropStatus = "Explorer restarted.";
-        ModernStatus = "Explorer restarted.";
+        OperationStatus = "资源管理器已重启。";
+        OverlayStatus = "资源管理器已重启。";
+        DropStatus = "资源管理器已重启。";
+        ModernStatus = "资源管理器已重启。";
     }
 
     [RelayCommand]
@@ -445,8 +445,8 @@ public partial class SettingsViewModel : ObservableObject
     {
         var deleted = ShellExtensionService.ClearIconCache();
         OverlayStatus = deleted == 0
-            ? "No cache files deleted (already clean or locked). Explorer restarting…"
-            : $"Cleared {deleted} icon cache file(s). Explorer restarting; first folder open will be slower as the cache rebuilds.";
+            ? "未删除任何缓存文件（已是干净状态或被占用）。资源管理器正在重启…"
+            : $"已清除 {deleted} 个图标缓存文件。资源管理器正在重启；缓存重建期间首次打开文件夹会稍慢。";
     }
 
     [RelayCommand(CanExecute = nameof(CanClearPick))]
@@ -467,9 +467,9 @@ public partial class SettingsViewModel : ObservableObject
         // fileExplorerContextMenus extension point at all — no amount of
         // Developer Mode will make it light up, so surface that distinctly.
         if (Environment.OSVersion.Version.Build < 22000)
-            return "Windows 11 (build 22000 or newer) is required — the top-section context-menu API doesn't exist on Windows 10.";
+            return "需要 Windows 11（build 22000 或更高）—— Windows 10 上不存在顶部区域右键菜单 API。";
         if (!ModernMenuService.IsDeveloperModeEnabled())
-            return "Windows Developer Mode is off. Enable it in Settings → Privacy & security → For developers so the unsigned sparse package can register.";
+            return "Windows 开发者模式已关闭。请在 设置 → 隐私和安全性 → 开发者选项 中启用，以便未签名的稀疏包完成注册。";
         return null;
     }
 }

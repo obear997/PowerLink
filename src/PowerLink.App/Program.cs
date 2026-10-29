@@ -82,7 +82,7 @@ public static class Program
                     "PowerLink", "shell-junction-error.log");
                 Directory.CreateDirectory(Path.GetDirectoryName(logPath)!);
                 File.AppendAllText(logPath,
-                    $"[{DateTime.UtcNow:O}] {hookName} EnsureJunction failed: {ex}{Environment.NewLine}");
+                    $"[{DateTime.UtcNow:O}] {hookName} EnsureJunction 失败：{ex}{Environment.NewLine}");
             }
             catch
             {

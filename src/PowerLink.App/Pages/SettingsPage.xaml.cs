@@ -35,17 +35,17 @@ public sealed partial class SettingsPage : Page
         var dialog = new ContentDialog
         {
             XamlRoot = this.XamlRoot,
-            Title = "Overlay slot limit",
+            Title = "叠加槽位上限",
             Content =
-                $"Windows loads only the first 15 shell-icon overlay handlers in alphabetical order. "
-                + $"Your system already has {handlers.Count} registered:"
+                $"Windows 只按字母序加载前 15 个 shell 图标叠加处理程序。"
+                + $"你的系统已经注册了 {handlers.Count} 个："
                 + Environment.NewLine + Environment.NewLine
                 + list
                 + Environment.NewLine + Environment.NewLine
-                + "PowerLink registers itself with a leading-space name so it sorts first — but a "
-                + "handler sorting after position 15 will be silently dropped. Install anyway?",
-            PrimaryButtonText = "Install overlay",
-            CloseButtonText = "Cancel",
+                + "PowerLink 用一个带前导空格的名字注册，以便排在最前 —— 但排在 "
+                + "第 15 位之后的处理程序会被静默丢弃。仍然安装吗？",
+            PrimaryButtonText = "安装叠加图标",
+            CloseButtonText = "取消",
             DefaultButton = ContentDialogButton.Close,
         };
 

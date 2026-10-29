@@ -30,14 +30,14 @@ namespace
     const ActionInfo& Info(ModernAction a)
     {
         static const ActionInfo infos[] = {
-            { L"Pick as link source",      L"Remember this path as the source for a later Drop",                true,  L"pick \"%s\"",          true,  ActionTargets::AnyFileOrFolder },
-            { L"Drop as hardlink here",    L"Make a hardlink (file) or a tree of hardlinks (folder) from the picked source", true,  L"drop \"%s\"",          false, ActionTargets::FolderOnly },
-            { L"Drop as junction here",    L"Create a junction here pointing at the picked folder",             true,  L"drop-junction \"%s\"", false, ActionTargets::FolderOnly },
-            { L"Show hardlinks",           L"List every path on this volume sharing this file's data",          true,  L"show-links \"%s\"",    false, ActionTargets::FileOnly },
-            { L"Inspect for hardlinks",    L"Open the Inspector with this folder",                              false, L"--inspect \"%s\"",     false, ActionTargets::FolderOnly },
-            { L"Deduplicate folder",       L"Open the Deduplicate page with this folder added",                 false, L"--dedup \"%s\"",       false, ActionTargets::FolderOnly },
-            { L"Clone folder (hardlinks)", L"Mirror folder tree as hardlinks — same volume only",               false, L"--clone \"%s\"",       false, ActionTargets::FolderOnly },
-            { L"Create junction pointing at this...", L"Open the Junction page with this folder pre-filled as the target", false, L"--junction \"%s\"",    false, ActionTargets::FolderOnly },
+            { L"选为链接源",      L"记住此路径，作为之后拖放操作的源",                true,  L"pick \"%s\"",          true,  ActionTargets::AnyFileOrFolder },
+            { L"在此创建硬链接",    L"从已选取的源创建硬链接（文件）或硬链接树（文件夹）", true,  L"drop \"%s\"",          false, ActionTargets::FolderOnly },
+            { L"在此创建目录联接",    L"在此创建指向已选取文件夹的目录联接",             true,  L"drop-junction \"%s\"", false, ActionTargets::FolderOnly },
+            { L"显示硬链接",           L"列出此卷上共享该文件数据的所有路径",          true,  L"show-links \"%s\"",    false, ActionTargets::FileOnly },
+            { L"检查硬链接",    L"用此文件夹打开检查器",                              false, L"--inspect \"%s\"",     false, ActionTargets::FolderOnly },
+            { L"去重文件夹",       L"用此文件夹打开去重页面",                 false, L"--dedup \"%s\"",       false, ActionTargets::FolderOnly },
+            { L"克隆文件夹（硬链接）", L"把文件夹树镜像为硬链接 —— 仅限同一卷",               false, L"--clone \"%s\"",       false, ActionTargets::FolderOnly },
+            { L"创建指向此文件夹的目录联接", L"用此文件夹预填为目标打开目录联接页面", false, L"--junction \"%s\"",    false, ActionTargets::FolderOnly },
         };
         return infos[static_cast<size_t>(a)];
     }

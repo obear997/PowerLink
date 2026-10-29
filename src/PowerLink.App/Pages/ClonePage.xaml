@@ -24,13 +24,13 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Text="Clone" Style="{ThemeResource TitleTextBlockStyle}"/>
+        <TextBlock Grid.Row="0" Text="克隆" Style="{ThemeResource TitleTextBlockStyle}"/>
         <TextBlock Grid.Row="1" TextWrapping="Wrap" Opacity="0.7"
-                   Text="Mirror a folder (or link a single file) to a new location using hardlinks — the new tree shares data with the original, no extra disk used. Not a copy, not a symlink. Same volume only."/>
+                   Text="用硬链接把一个文件夹（或单个文件）镜像到新位置 —— 新树与原树共享数据，不额外占用磁盘。不是复制，也不是符号链接。仅限同一卷。"/>
 
         <InfoBar Grid.Row="2" IsOpen="True" IsClosable="False" Severity="Informational"
-                 Title="What's a hardlink?"
-                 Message="One file on disk with multiple names. Opens normally from every path. Delete one path — the data stays until the last name is gone. Works only within a single NTFS volume."/>
+                 Title="什么是硬链接？"
+                 Message="硬链接是磁盘上同一份文件拥有多个名字。从任何路径打开都正常。删除其中一个路径后，数据会保留到最后一个名字也消失为止。只能在同一 NTFS 卷内工作。"/>
 
         <Grid Grid.Row="3" ColumnSpacing="8">
             <Grid.ColumnDefinitions>
@@ -38,23 +38,23 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <TextBox Header="Source (file or folder)"
+            <TextBox Header="源（文件或文件夹）"
                      Text="{x:Bind ViewModel.SourcePath, Mode=TwoWay}"
                      PlaceholderText="C:\path\to\source"/>
             <Button Grid.Column="1" VerticalAlignment="Bottom"
                     Command="{x:Bind ViewModel.PickSourceFolderCommand}"
-                    ToolTipService.ToolTip="Pick a folder">
+                    ToolTipService.ToolTip="选择文件夹">
                 <StackPanel Orientation="Horizontal" Spacing="6">
                     <SymbolIcon Symbol="Folder"/>
-                    <TextBlock Text="Folder"/>
+                    <TextBlock Text="文件夹"/>
                 </StackPanel>
             </Button>
             <Button Grid.Column="2" VerticalAlignment="Bottom"
                     Command="{x:Bind ViewModel.PickSourceFileCommand}"
-                    ToolTipService.ToolTip="Pick a single file">
+                    ToolTipService.ToolTip="选择单个文件">
                 <StackPanel Orientation="Horizontal" Spacing="6">
                     <SymbolIcon Symbol="Document"/>
-                    <TextBlock Text="File"/>
+                    <TextBlock Text="文件"/>
                 </StackPanel>
             </Button>
         </Grid>
@@ -64,19 +64,19 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <TextBox Header="Destination"
+            <TextBox Header="目标位置"
                      Text="{x:Bind ViewModel.DestPath, Mode=TwoWay}"
                      PlaceholderText="C:\path\to\destination"/>
             <Button Grid.Column="1" VerticalAlignment="Bottom"
                     Command="{x:Bind ViewModel.PickDestCommand}">
                 <StackPanel Orientation="Horizontal" Spacing="6">
                     <SymbolIcon Symbol="Folder"/>
-                    <TextBlock Text="Browse"/>
+                    <TextBlock Text="浏览"/>
                 </StackPanel>
             </Button>
         </Grid>
 
-        <CheckBox Grid.Row="5" Content="Dry run (don't touch the filesystem)"
+        <CheckBox Grid.Row="5" Content="试运行（不修改文件系统）"
                   IsChecked="{x:Bind ViewModel.DryRun, Mode=TwoWay}"/>
 
         <StackPanel Grid.Row="6" Orientation="Horizontal" Spacing="12">
@@ -84,13 +84,13 @@
                     Style="{ThemeResource AccentButtonStyle}">
                 <StackPanel Orientation="Horizontal" Spacing="6">
                     <SymbolIcon Symbol="Play"/>
-                    <TextBlock Text="Run"/>
+                    <TextBlock Text="运行"/>
                 </StackPanel>
             </Button>
             <Button Command="{x:Bind ViewModel.CancelCommand}">
                 <StackPanel Orientation="Horizontal" Spacing="6">
                     <SymbolIcon Symbol="Cancel"/>
-                    <TextBlock Text="Cancel"/>
+                    <TextBlock Text="取消"/>
                 </StackPanel>
             </Button>
         </StackPanel>

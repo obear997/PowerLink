@@ -7,13 +7,14 @@ namespace PowerLink.App.Services;
 
 public sealed class UpdateService
 {
-    private const string RepoUrl = "https://github.com/dawidope/PowerLink";
+    // Gitea 仓库地址（Velopack 的 GiteaSource 会据此调用 /api/v1 接口）。
+    private const string RepoUrl = "https://gitea.obear.top/obear/PowerLink";
 
     private readonly UpdateManager _manager;
 
     public UpdateService()
     {
-        var source = new GithubSource(RepoUrl, accessToken: null, prerelease: false);
+        var source = new GiteaSource(RepoUrl, accessToken: null, prerelease: false);
         _manager = new UpdateManager(source);
     }
 
@@ -58,8 +59,8 @@ public sealed class UpdateService
         ArgumentNullException.ThrowIfNull(info);
         if (!IsVelopackInstalled)
             throw new InvalidOperationException(
-                "ApplyAsync requires the app to be running from a Velopack-managed " +
-                "install (Setup.exe or Portable.zip). Dev builds out of bin/ can't update.");
+                "ApplyAsync 需要应用运行在 Velopack 管理的安装目录中（Setup.exe 或 Portable.zip）。"
+                + "bin/ 下的开发构建无法自动更新。");
 
         await _manager.DownloadUpdatesAsync(info).ConfigureAwait(false);
         _manager.ApplyUpdatesAndRestart(info);

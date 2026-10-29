@@ -18,5 +18,5 @@ public partial class DuplicateGroupViewModel : ObservableObject
     public long FileSize => Group.FileSize;
     public long WastedBytes => Group.WastedBytes;
     public int FileCount => Group.Files.Count;
-    public string Header => $"{FileCount} files \u2014 keep: {System.IO.Path.GetFileName(CanonicalPath)}";
+    public string Header => $"{FileCount} 个文件 — 保留：{System.IO.Path.GetFileName(CanonicalPath)}";
 }

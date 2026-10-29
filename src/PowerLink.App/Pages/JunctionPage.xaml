@@ -19,27 +19,27 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Text="Junction" Style="{ThemeResource TitleTextBlockStyle}"/>
+        <TextBlock Grid.Row="0" Text="目录联接" Style="{ThemeResource TitleTextBlockStyle}"/>
         <TextBlock Grid.Row="1" TextWrapping="Wrap" Opacity="0.7"
-                   Text="Create a directory junction — a pointer that makes one folder appear at another path. Same volume or across local volumes. No admin or Developer Mode required. Deleting the junction never touches the target's contents."/>
+                   Text="创建目录联接 —— 一个让某个文件夹出现在另一个路径下的指针。同一卷或跨本地卷均可。无需管理员或开发者模式。删除联接永远不会影响目标的内容。"/>
 
         <InfoBar Grid.Row="2" IsOpen="True" IsClosable="False" Severity="Informational"
-                 Title="What's a junction?"
-                 Message="A directory pointer — the junction folder appears at its own path but its contents come from the target. Target must be a local folder (no UNC). No admin needed to create or delete. Deleting the junction removes only the pointer, never the target's contents."/>
+                 Title="什么是目录联接？"
+                 Message="一个目录指针 —— 联接文件夹出现在自己的路径下，但内容来自目标。目标必须是本地文件夹（不支持 UNC）。创建或删除都不需要管理员。删除联接只会移除指针，绝不会删除目标内容。"/>
 
         <Grid Grid.Row="3" ColumnSpacing="8">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <TextBox Header="Target folder (where the junction points)"
+            <TextBox Header="目标文件夹（联接指向的位置）"
                      Text="{x:Bind ViewModel.TargetPath, Mode=TwoWay}"
                      PlaceholderText="C:\path\to\real\folder"/>
             <Button Grid.Column="1" VerticalAlignment="Bottom"
                     Command="{x:Bind ViewModel.PickTargetCommand}">
                 <StackPanel Orientation="Horizontal" Spacing="6">
                     <SymbolIcon Symbol="Folder"/>
-                    <TextBlock Text="Browse"/>
+                    <TextBlock Text="浏览"/>
                 </StackPanel>
             </Button>
         </Grid>
@@ -49,27 +49,27 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <TextBox Header="Parent folder (where the junction is created)"
+            <TextBox Header="父文件夹（联接创建的位置）"
                      Text="{x:Bind ViewModel.ParentPath, Mode=TwoWay}"
                      PlaceholderText="C:\path\where\junction\appears"/>
             <Button Grid.Column="1" VerticalAlignment="Bottom"
                     Command="{x:Bind ViewModel.PickParentCommand}">
                 <StackPanel Orientation="Horizontal" Spacing="6">
                     <SymbolIcon Symbol="Folder"/>
-                    <TextBlock Text="Browse"/>
+                    <TextBlock Text="浏览"/>
                 </StackPanel>
             </Button>
         </Grid>
 
         <TextBox Grid.Row="5"
-                 Header="Junction name (auto-derived from target — edit if you want a different name)"
+                 Header="联接名称（默认由目标推导 —— 如需不同名称可修改）"
                  Text="{x:Bind ViewModel.LinkName, Mode=TwoWay}"
                  PlaceholderText="my-junction"/>
 
         <CheckBox Grid.Row="6"
-                  Content="Allow missing target (create dangling junction)"
+                  Content="允许目标不存在（创建悬空联接）"
                   IsChecked="{x:Bind ViewModel.AllowMissingTarget, Mode=TwoWay}"
-                  ToolTipService.ToolTip="By default the target folder must exist. Check this to create a junction whose target does not exist yet."/>
+                  ToolTipService.ToolTip="默认要求目标文件夹已存在。勾选后可以创建目标尚不存在的联接。"/>
 
         <StackPanel Grid.Row="7" Spacing="12">
             <StackPanel Orientation="Horizontal" Spacing="12">
@@ -77,13 +77,13 @@
                         Style="{ThemeResource AccentButtonStyle}">
                     <StackPanel Orientation="Horizontal" Spacing="6">
                         <SymbolIcon Symbol="Link"/>
-                        <TextBlock Text="Create junction"/>
+                        <TextBlock Text="创建联接"/>
                     </StackPanel>
                 </Button>
                 <Button Command="{x:Bind ViewModel.ResetCommand}">
                     <StackPanel Orientation="Horizontal" Spacing="6">
                         <SymbolIcon Symbol="Clear"/>
-                        <TextBlock Text="Reset"/>
+                        <TextBlock Text="重置"/>
                     </StackPanel>
                 </Button>
             </StackPanel>

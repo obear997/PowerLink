@@ -25,7 +25,7 @@ public static class VelopackShellShim
         ArgumentException.ThrowIfNullOrWhiteSpace(currentAppFolder);
         if (!Directory.Exists(currentAppFolder))
             throw new DirectoryNotFoundException(
-                $"Cannot create junction — target folder does not exist: {currentAppFolder}");
+                $"无法创建联接 —— 目标文件夹不存在：{currentAppFolder}");
 
         var parent = Path.GetDirectoryName(StableShellExtDir);
         if (!string.IsNullOrEmpty(parent))
@@ -42,9 +42,9 @@ public static class VelopackShellShim
             // from inside an install/update hook with no UI.
             if (!IsReparsePoint(StableShellExtDir))
                 throw new InvalidOperationException(
-                    $"Cannot retarget shell-ext junction: '{StableShellExtDir}' " +
-                    "exists as a real directory, not a junction. " +
-                    "Remove it manually and re-run the app.");
+                    $"无法重定向 shell 扩展联接：“{StableShellExtDir}”"
+                    + "以真实目录（而非联接）形式存在。"
+                    + "请手动删除后重新运行应用。");
 
             // Junction points delete via Directory.Delete without `recursive`
             // because the delete unlinks the reparse point, not the target's
@@ -65,7 +65,7 @@ public static class VelopackShellShim
         };
 
         using var proc = Process.Start(psi)
-            ?? throw new InvalidOperationException("Failed to start cmd.exe for mklink.");
+            ?? throw new InvalidOperationException("无法为 mklink 启动 cmd.exe。");
         // Drain stdout and stderr concurrently before WaitForExit. Sequencing
         // ReadToEnd on both pipes deadlocks if cmd ever fills the second pipe's
         // buffer while we're blocked on the first — rare with mklink's tiny

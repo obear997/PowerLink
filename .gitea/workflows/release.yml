@@ -1,0 +1,186 @@
+name: release
+
+on:
+  push:
+    tags: ['v*']
+
+# Gitea Actions 说明：
+# - 运行器标签 `windows-latest` 需与自建 runner 的标签一致；若你的 runner 用别的标签（如 `windows`），改这里即可。
+# - 自动令牌走 `secrets.GITHUB_TOKEN`（Gitea act_runner 会注入），用于创建 release 与上传附件。
+# - 发布目标为当前 Gitea 仓库的 Releases（通过 Gitea REST API），不再依赖 GitHub。
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Add MSBuild to PATH
+        uses: microsoft/setup-msbuild@v3
+
+      - name: Restore
+        run: dotnet restore PowerLink.slnx
+
+      - name: Build and run ShellExt utility tests
+        shell: pwsh
+        run: |
+          msbuild tests/PowerLink.ShellExt.Tests/PowerLink.ShellExt.Tests.vcxproj `
+            -p:Configuration=Release -p:Platform=x64 -nologo -v:minimal
+          $exe = "tests/PowerLink.ShellExt.Tests/x64/Release/PowerLink.ShellExt.Tests.exe"
+          if (-not (Test-Path $exe)) {
+            Write-Error "Test exe not produced at $exe"
+            exit 1
+          }
+          & $exe
+          if ($LASTEXITCODE -ne 0) {
+            Write-Error "ShellExt utility tests failed (exit $LASTEXITCODE)."
+            exit 1
+          }
+
+      - name: Publish App
+        run: >
+          dotnet publish src/PowerLink.App/PowerLink.App.csproj
+          -c Release
+          -r win-x64
+          -p:Platform=x64
+          -p:SelfContained=true
+          -p:PublishSingleFile=false
+          -p:PublishTrimmed=false
+          -o artifacts/publish
+
+      - name: Publish Cli into same folder
+        run: >
+          dotnet publish src/PowerLink.Cli/PowerLink.Cli.csproj
+          -c Release
+          -r win-x64
+          -p:Platform=x64
+          -p:SelfContained=true
+          -p:PublishSingleFile=false
+          -p:PublishTrimmed=false
+          -o artifacts/publish
+
+      - name: Sanity check payload
+        shell: pwsh
+        run: |
+          $required = @(
+            'PowerLink.App.exe',
+            'PowerLink.Cli.exe',
+            'PowerLink.ShellExt.dll',
+            'AppxManifest.xml',
+            'Assets/Icon.ico',
+            'Assets/icon.png',
+            'Microsoft.WindowsAppRuntime.Bootstrap.dll',
+            'Microsoft.ui.xaml.dll'
+          )
+          $missing = @()
+          foreach ($f in $required) {
+            $p = "artifacts/publish/$f"
+            if (-not (Test-Path $p)) { $missing += $f }
+          }
+          if ($missing.Count -gt 0) {
+            Write-Error "Missing from publish output: $($missing -join ', ')"
+            Get-ChildItem artifacts/publish -Recurse | Select-Object -First 100
+            exit 1
+          }
+
+      - name: Resolve version
+        id: ver
+        shell: pwsh
+        run: |
+          $tag = '${{ github.ref_name }}'
+          $ver = $tag -replace '^v',''
+          "version=$ver" >> $env:GITHUB_OUTPUT
+
+      - name: Pack with Velopack
+        shell: pwsh
+        run: |
+          dotnet tool install --global vpk
+          # 仅打包（不在此步上传）。Velopack 会产出 Setup.exe / Portable.zip /
+          # *.nupkg / releases.win.json / assets.win.json 到 velopack-output。
+          #
+          # 增量更新（delta）需要先下载上一个发布包；Velopack 的 vpk 支持
+          # `vpk download gitea --repoUrl <url> --token <token> --outputDir velopack-output`，
+          # 但首次发布或无历史包时该命令会失败，且吞掉错误会产出损坏的 delta。
+          # 为保证发布可靠性，这里默认只产全量包（full-only）；需要 delta 时，
+          # 先确认已有稳定发布，再显式加上 download 步骤。
+          vpk pack `
+            --packId PowerLink `
+            --packVersion ${{ steps.ver.outputs.version }} `
+            --packDir artifacts/publish `
+            --mainExe PowerLink.App.exe `
+            --packTitle "PowerLink" `
+            --packAuthors "Dawid Wenderski" `
+            --outputDir velopack-output
+
+      - name: Extract curated release notes from CHANGELOG.md
+        shell: pwsh
+        run: |
+          $tag = '${{ github.ref_name }}'
+          $version = $tag -replace '^v',''
+          $lines = Get-Content CHANGELOG.md
+          $out = New-Object System.Collections.Generic.List[string]
+          $matched = $false
+          foreach ($line in $lines) {
+            if ($line -match '^## ') {
+              if ($matched) { break }
+              if ($line.Contains($version)) { $matched = $true; continue }
+            }
+            if ($matched -and $line -match '^---\s*$') { break }
+            if ($matched) { $out.Add($line) }
+          }
+          if ($out.Count -eq 0) {
+            Write-Warning "No CHANGELOG.md section found for $version — release body will be empty."
+          }
+          ($out -join "`n") | Set-Content release-body.md -Encoding utf8
+
+      - name: Create Gitea release and upload assets
+        shell: pwsh
+        env:
+          # Gitea act_runner 自动注入该令牌，无需手动配置 Secret。
+          GITEA_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          $repo   = '${{ github.repository }}'          # owner/repo
+          $server = '${{ github.server_url }}'          # 例如 https://gitea.obear.top
+          $tag    = '${{ github.ref_name }}'
+          $token  = $env:GITEA_TOKEN
+          $isPre  = $tag.Contains('-')
+
+          $headers = @{ Authorization = "token $token" }
+
+          # 若该 tag 已有 release，先删除，避免重复上传 409。
+          $existing = Invoke-RestMethod -Method Get `
+            -Uri "$server/api/v1/repos/$repo/releases" -Headers $headers
+          foreach ($r in $existing) {
+            if ($r.tag_name -eq $tag) {
+              Invoke-RestMethod -Method Delete `
+                -Uri "$server/api/v1/repos/$repo/releases/$($r.id)" -Headers $headers
+            }
+          }
+
+          $body = ''
+          if (Test-Path release-body.md) { $body = Get-Content release-body.md -Raw }
+
+          $payload = @{
+            tag_name   = $tag
+            name       = $tag
+            body       = $body
+            draft      = $false
+            prerelease = $isPre
+          } | ConvertTo-Json -Depth 5
+
+          $release = Invoke-RestMethod -Method Post `
+            -Uri "$server/api/v1/repos/$repo/releases" `
+            -Headers $headers -ContentType 'application/json' -Body $payload
+
+          Get-ChildItem velopack-output -File | ForEach-Object {
+            $name = [uri]::EscapeDataString($_.Name)
+            Write-Host "Uploading $($_.Name) ..."
+            Invoke-RestMethod -Method Post `
+              -Uri "$server/api/v1/repos/$repo/releases/$($release.id)/assets?name=$name" `
+              -Headers $headers -Form @{ attachment = Get-Item $_.FullName }
+          }

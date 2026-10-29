@@ -113,7 +113,7 @@ public sealed partial class MainWindow : Window
             var next = current == ElementTheme.Dark ? ElementTheme.Light : ElementTheme.Dark;
             root.RequestedTheme = next;
             ThemeToggleIcon.Glyph = next == ElementTheme.Dark ? "\uE706" : "\uE708";
-            ThemeToggleItem.Content = next == ElementTheme.Dark ? "Light mode" : "Dark mode";
+            ThemeToggleItem.Content = next == ElementTheme.Dark ? "浅色模式" : "深色模式";
         }
     }
 }

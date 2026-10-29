@@ -21,8 +21,8 @@ public partial class ShellVerbViewModel : ObservableObject
     public string TargetsText => Verb.TargetsText;
     public string StatusText => (IsInstalled, Verb.RequiresElevation) switch
     {
-        (true, _) => "Installed",
-        (false, true) => "Needs admin",
-        (false, false) => "Not installed",
+        (true, _) => "已安装",
+        (false, true) => "需要管理员",
+        (false, false) => "未安装",
     };
 }

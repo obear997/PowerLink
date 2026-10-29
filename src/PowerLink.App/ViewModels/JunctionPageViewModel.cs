@@ -26,7 +26,7 @@ public partial class JunctionPageViewModel : ObservableObject
 
     public JunctionPageViewModel()
     {
-        StatusText = "Pick the target folder this junction will point at, then the parent folder where the junction is created.";
+        StatusText = "请选择此联接要指向的目标文件夹，然后选择创建联接的父文件夹。";
     }
 
     [RelayCommand]
@@ -66,12 +66,12 @@ public partial class JunctionPageViewModel : ObservableObject
         try
         {
             Win32Junction.Create(linkPath, TargetPath, allowMissingTarget: AllowMissingTarget);
-            StatusText = "Junction created.";
-            SummaryText = $"{linkPath}  \u2192  {TargetPath}";
+            StatusText = "联接已创建。";
+            SummaryText = $"{linkPath}  →  {TargetPath}";
         }
         catch (Exception ex) when (ex is IOException or ArgumentException or DirectoryNotFoundException)
         {
-            StatusText = "Create failed.";
+            StatusText = "创建失败。";
             SummaryText = ex.Message;
         }
     }
@@ -84,7 +84,7 @@ public partial class JunctionPageViewModel : ObservableObject
         LinkName = null;
         AllowMissingTarget = false;
         SummaryText = null;
-        StatusText = "Pick the target folder this junction will point at, then the parent folder where the junction is created.";
+        StatusText = "请选择此联接要指向的目标文件夹，然后选择创建联接的父文件夹。";
     }
 
     private bool CanCreate() =>

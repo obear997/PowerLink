@@ -60,9 +60,9 @@ public static class ShellExtensionService
         new ShellVerb
         {
             Id = "PowerLinkPick",
-            Label = "PowerLink: Pick as link source",
-            Description = "Remember this path as the source for a later 'Drop as hardlink here'. Both must be on the same NTFS volume.",
-            TargetsText = "Files, folders",
+            Label = "PowerLink: 选为链接源",
+            Description = "记住此路径，作为之后“在此创建硬链接”的源。两者必须在同一 NTFS 卷上。",
+            TargetsText = "文件、文件夹",
             Executable = ShellVerbTarget.Cli,
             Keys = new[]
             {
@@ -73,9 +73,9 @@ public static class ShellExtensionService
         new ShellVerb
         {
             Id = "PowerLinkDrop",
-            Label = "PowerLink: Drop as hardlink here",
-            Description = "Make a hardlink (file) or a tree of hardlinks (folder) from the picked source. Shares data — not a copy, not a symlink.",
-            TargetsText = "Folders, folder background",
+            Label = "PowerLink: 在此创建硬链接",
+            Description = "从已选取的源创建硬链接（文件）或硬链接树（文件夹）。共享数据 —— 不是复制，也不是符号链接。",
+            TargetsText = "文件夹、文件夹背景",
             Executable = ShellVerbTarget.Cli,
             Keys = new[]
             {
@@ -86,9 +86,9 @@ public static class ShellExtensionService
         new ShellVerb
         {
             Id = "PowerLinkDropJunction",
-            Label = "PowerLink: Drop as junction here",
-            Description = "Create a junction here pointing at the picked folder. Folder sources only (junctions don't apply to files). No admin needed; deleting the junction never affects the target.",
-            TargetsText = "Folders, folder background",
+            Label = "PowerLink: 在此创建目录联接",
+            Description = "在此创建指向已选取文件夹的目录联接。仅限文件夹源（联接不适用于文件）。无需管理员；删除联接不会影响目标。",
+            TargetsText = "文件夹、文件夹背景",
             Executable = ShellVerbTarget.Cli,
             Keys = new[]
             {
@@ -99,9 +99,9 @@ public static class ShellExtensionService
         new ShellVerb
         {
             Id = "PowerLinkShowLinks",
-            Label = "PowerLink: Show hardlinks",
-            Description = "Show every path on this volume that is a hardlink to this file's data. Quick dialog, no scan.",
-            TargetsText = "Files",
+            Label = "PowerLink: 显示硬链接",
+            Description = "显示此卷上指向该文件数据的所有路径。快速对话框，无需扫描。",
+            TargetsText = "文件",
             Executable = ShellVerbTarget.Cli,
             Keys = new[]
             {
@@ -111,9 +111,9 @@ public static class ShellExtensionService
         new ShellVerb
         {
             Id = "PowerLinkInspect",
-            Label = "PowerLink: Inspect for hardlinks",
-            Description = "Open PowerLink's Inspector with this folder — finds files inside that are already hardlinked and shows every sibling path.",
-            TargetsText = "Folders, folder background",
+            Label = "PowerLink: 检查硬链接",
+            Description = "用此文件夹打开 PowerLink 检查器 —— 找出其中已是硬链接的文件并显示所有同级路径。",
+            TargetsText = "文件夹、文件夹背景",
             Executable = ShellVerbTarget.App,
             Keys = new[]
             {
@@ -124,9 +124,9 @@ public static class ShellExtensionService
         new ShellVerb
         {
             Id = "PowerLinkDedup",
-            Label = "PowerLink: Deduplicate folder",
-            Description = "Open PowerLink's Deduplicate page with this folder added. Finds identical files and replaces duplicates with hardlinks to reclaim disk space.",
-            TargetsText = "Folders, folder background",
+            Label = "PowerLink: 去重文件夹",
+            Description = "用此文件夹打开 PowerLink 去重页面。找出完全相同的文件并用硬链接替换重复项以回收磁盘空间。",
+            TargetsText = "文件夹、文件夹背景",
             Executable = ShellVerbTarget.App,
             Keys = new[]
             {
@@ -137,9 +137,9 @@ public static class ShellExtensionService
         new ShellVerb
         {
             Id = "PowerLinkClone",
-            Label = "PowerLink: Clone folder (hardlinks)",
-            Description = "Open PowerLink's Clone page with this folder as source. Mirrors the tree as hardlinks — not a copy, no extra disk used, same volume only.",
-            TargetsText = "Folders",
+            Label = "PowerLink: 克隆文件夹（硬链接）",
+            Description = "以该文件夹为源打开 PowerLink 克隆页面。把目录树镜像为硬链接 —— 不是复制，不额外占用磁盘，仅限同一卷。",
+            TargetsText = "文件夹",
             Executable = ShellVerbTarget.App,
             Keys = new[]
             {
@@ -149,9 +149,9 @@ public static class ShellExtensionService
         new ShellVerb
         {
             Id = "PowerLinkJunction",
-            Label = "PowerLink: Create junction pointing at this folder",
-            Description = "Open PowerLink's Junction page with this folder pre-filled as the target. Pick the parent folder where the junction appears. No admin or Developer Mode needed; deleting a junction never affects the target's contents.",
-            TargetsText = "Folders",
+            Label = "PowerLink: 创建指向此文件夹的目录联接",
+            Description = "用此文件夹预填为目标打开 PowerLink 目录联接页面。选择联接出现的父文件夹。无需管理员或开发者模式；删除联接永远不会影响目标内容。",
+            TargetsText = "文件夹",
             Executable = ShellVerbTarget.App,
             Keys = new[]
             {
@@ -165,9 +165,9 @@ public static class ShellExtensionService
         new ShellVerb
         {
             Id = "PowerLinkHardlinkOverlay",
-            Label = "Hardlink overlay icon",
-            Description = "Show a small badge on the icon of any file that's a hardlink (has 2+ names on disk). Quick visual check across every Explorer window. Uses 1 of 15 Windows overlay slots.",
-            TargetsText = "All files in Explorer",
+            Label = "硬链接叠加图标",
+            Description = "为硬链接文件（磁盘上有 2 个及以上名字）的图标显示一个小角标。每个资源管理器窗口都能一眼看到。占用 15 个 Windows 叠加槽位中的 1 个。",
+            TargetsText = "资源管理器中的所有文件",
             Executable = ShellVerbTarget.Cli,
             Keys = Array.Empty<ShellVerbKey>(),
             Kind = ShellVerbKind.OverlayHandler,
@@ -180,9 +180,9 @@ public static class ShellExtensionService
         new ShellVerb
         {
             Id = "PowerLinkDropHandler",
-            Label = "PowerLink drop handler",
-            Description = "Right-drag files or folders onto a folder and choose 'Hardlink here' (for files), 'Clone tree here' (for folders), or 'Junction here pointing at source' (for folders). One DLL adds all three menu items. Per-user HKCU, no admin.",
-            TargetsText = "Right-drag onto Folder",
+            Label = "PowerLink 拖放处理程序",
+            Description = "右键拖动文件或文件夹到某个文件夹上，选择 “在此创建硬链接”（文件）、“在此克隆目录树（硬链接）”（文件夹）或 “在此创建目录联接”（文件夹）。一个 DLL 提供全部三个菜单项。按用户写 HKCU，无需管理员。",
+            TargetsText = "右键拖动到文件夹上",
             Executable = ShellVerbTarget.App,
             Keys = Array.Empty<ShellVerbKey>(),
             Kind = ShellVerbKind.DropHandler,
@@ -195,9 +195,9 @@ public static class ShellExtensionService
         new ShellVerb
         {
             Id = "PowerLinkModernMenu",
-            Label = "Windows 11 modern menu (experimental)",
-            Description = "Adds a PowerLink submenu to the top section of Win11 file/folder right-click menu — no 'Show more options' needed. Registers a sparse MSIX package; requires Windows Developer Mode.",
-            TargetsText = "Right-click any file or folder",
+            Label = "Windows 11 现代菜单（实验性）",
+            Description = "在 Win11 文件/文件夹右键菜单顶部区域添加 PowerLink 子菜单 —— 无需“显示更多选项”。注册稀疏 MSIX 包；需要 Windows 开发者模式。",
+            TargetsText = "右键单击任意文件或文件夹",
             Executable = ShellVerbTarget.App,
             Keys = Array.Empty<ShellVerbKey>(),
             Kind = ShellVerbKind.ModernMenu,
@@ -241,7 +241,7 @@ public static class ShellExtensionService
     public static void SetLayout(ContextMenuLayout layout)
     {
         using var k = Registry.CurrentUser.CreateSubKey(PrefsKey, writable: true)
-            ?? throw new InvalidOperationException("Failed to create PowerLink prefs key.");
+            ?? throw new InvalidOperationException("无法创建 PowerLink 首选项注册表项。");
         k.SetValue("ContextMenuLayout", layout.ToString(), RegistryValueKind.String);
     }
 
@@ -319,22 +319,22 @@ public static class ShellExtensionService
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(dllPath);
         if (!File.Exists(dllPath))
-            throw new FileNotFoundException("Shell extension DLL not found.", dllPath);
+            throw new FileNotFoundException("未找到 shell 扩展 DLL。", dllPath);
 
         using (var clsid = Registry.CurrentUser.CreateSubKey(
             $@"{ClassesRoot}\CLSID\{DropClsid}", writable: true)
-            ?? throw new InvalidOperationException("Failed to create CLSID key."))
+            ?? throw new InvalidOperationException("无法创建 CLSID 注册表项。"))
         {
             clsid.SetValue(string.Empty, DropDescription, RegistryValueKind.String);
             using var inproc = clsid.CreateSubKey("InprocServer32", writable: true)
-                ?? throw new InvalidOperationException("Failed to create InprocServer32 key.");
+                ?? throw new InvalidOperationException("无法创建 InprocServer32 注册表项。");
             inproc.SetValue(string.Empty, dllPath, RegistryValueKind.String);
             inproc.SetValue("ThreadingModel", "Apartment", RegistryValueKind.String);
         }
 
         using var drop = Registry.CurrentUser.CreateSubKey(
             $@"{ClassesRoot}\Directory\shellex\DragDropHandlers\{DropRegName}", writable: true)
-            ?? throw new InvalidOperationException("Failed to create drop handler registration key.");
+            ?? throw new InvalidOperationException("无法创建拖放处理程序注册表项。");
         drop.SetValue(string.Empty, DropClsid, RegistryValueKind.String);
     }
 
@@ -457,7 +457,7 @@ public static class ShellExtensionService
             }
 
             using var k = Registry.CurrentUser.CreateSubKey(parentPath, writable: true)
-                ?? throw new InvalidOperationException($"Failed to create parent verb key: {parentPath}");
+                ?? throw new InvalidOperationException($"无法创建父级动作注册表项：{parentPath}");
             k.SetValue("MUIVerb", "PowerLink", RegistryValueKind.String);
             if (icon is not null) k.SetValue("Icon", icon, RegistryValueKind.String);
             // SubCommands="" + ExtendedSubCommandsKey together tell the shell to
@@ -612,13 +612,13 @@ public static class ShellExtensionService
     private static void WriteVerb(string keyPath, string menuText, string? icon, string command)
     {
         using var key = Registry.CurrentUser.CreateSubKey(keyPath, writable: true)
-            ?? throw new InvalidOperationException($"Failed to create registry key: {keyPath}");
+            ?? throw new InvalidOperationException($"无法创建注册表项：{keyPath}");
         key.SetValue(string.Empty, menuText, RegistryValueKind.String);
         if (icon is not null)
             key.SetValue("Icon", icon, RegistryValueKind.String);
 
         using var cmdKey = key.CreateSubKey("command", writable: true)
-            ?? throw new InvalidOperationException($"Failed to create command sub-key under: {keyPath}");
+            ?? throw new InvalidOperationException($"无法在以下路径创建 command 子项：{keyPath}");
         cmdKey.SetValue(string.Empty, command, RegistryValueKind.String);
     }
 

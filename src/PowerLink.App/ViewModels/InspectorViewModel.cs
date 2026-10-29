@@ -31,14 +31,14 @@ public partial class InspectorViewModel : ObservableObject
     [ObservableProperty] public partial string? CurrentFileText { get; set; }
     [ObservableProperty] public partial string? FilesText { get; set; }
 
-    public string HardlinksHeader => $"Hardlinks ({Groups.Count:N0})";
+    public string HardlinksHeader => $"硬链接（{Groups.Count:N0}）";
     public string JunctionsHeader
     {
         get
         {
             var dangling = Junctions.Count(j => j.IsTargetMissing);
-            var suffix = dangling > 0 ? $", {dangling:N0} dangling" : string.Empty;
-            return $"Junctions ({Junctions.Count:N0}{suffix})";
+            var suffix = dangling > 0 ? $"，{dangling:N0} 个悬空" : string.Empty;
+            return $"目录联接（{Junctions.Count:N0}{suffix}）";
         }
     }
 
@@ -50,7 +50,7 @@ public partial class InspectorViewModel : ObservableObject
 
     public InspectorViewModel()
     {
-        StatusText = "Add folders to inspect.";
+        StatusText = "添加要检查的文件夹。";
         Paths.CollectionChanged += (_, _) => ScanCommand.NotifyCanExecuteChanged();
         Groups.CollectionChanged += (_, _) => NotifyHeaderChanged();
         Junctions.CollectionChanged += (_, _) => NotifyHeaderChanged();
@@ -83,7 +83,7 @@ public partial class InspectorViewModel : ObservableObject
         Groups.Clear();
         Junctions.Clear();
         SummaryText = null;
-        StatusText = "Scanning...";
+        StatusText = "正在扫描…";
         IsProgressIndeterminate = true;
         ProgressValue = 0;
 
@@ -119,23 +119,21 @@ public partial class InspectorViewModel : ObservableObject
 
             sw.Stop();
             SummaryText =
-                $"Scanned {records.Count:N0} files across {Paths.Count} location(s) in {sw.Elapsed.TotalSeconds:F1}s. " +
-                $"Found {groups.Count:N0} hardlinked file{(groups.Count == 1 ? string.Empty : "s")} " +
-                $"({totalLinks:N0} link{(totalLinks == 1 ? string.Empty : "s")} in scan), " +
-                $"{FormatBytes(totalSaved)} shared. " +
-                $"Junctions: {Junctions.Count:N0}" +
-                (dangling > 0 ? $" ({dangling:N0} dangling)" : string.Empty) + ".";
+                $"扫描了 {records.Count:N0} 个文件，覆盖 {Paths.Count} 个位置，用时 {sw.Elapsed.TotalSeconds:F1} 秒。"
+                + $"找到 {groups.Count:N0} 个硬链接文件（扫描内共 {totalLinks:N0} 个链接），共享 {FormatBytes(totalSaved)}。"
+                + $"目录联接：{Junctions.Count:N0}"
+                + (dangling > 0 ? $"（{dangling:N0} 个悬空）" : string.Empty) + "。";
             StatusText = groups.Count == 0 && Junctions.Count == 0
-                ? "No hardlinks or junctions found in these folders."
-                : "Scan complete.";
+                ? "这些文件夹中未发现硬链接或目录联接。"
+                : "扫描完成。";
         }
         catch (OperationCanceledException)
         {
-            StatusText = "Cancelled.";
+            StatusText = "已取消。";
         }
         catch (Exception ex)
         {
-            StatusText = $"Error: {ex.Message}";
+            StatusText = $"错误：{ex.Message}";
         }
         finally
         {
@@ -158,11 +156,11 @@ public partial class InspectorViewModel : ObservableObject
         {
             Win32Junction.Delete(jvm.LinkPath);
             Junctions.Remove(jvm);
-            StatusText = $"Deleted junction: {jvm.LinkPath} (target preserved)";
+            StatusText = $"已删除联接：{jvm.LinkPath}（目标已保留）";
         }
         catch (Exception ex)
         {
-            StatusText = $"Delete failed: {ex.Message}";
+            StatusText = $"删除失败：{ex.Message}";
         }
     }
 
@@ -180,11 +178,11 @@ public partial class InspectorViewModel : ObservableObject
             var idx = Junctions.IndexOf(jvm);
             if (idx >= 0)
                 Junctions[idx] = JunctionViewModel.FromInfo(updated);
-            StatusText = $"Repaired junction: {jvm.LinkPath} \u2192 {newTarget}";
+            StatusText = $"已修复联接：{jvm.LinkPath} → {newTarget}";
         }
         catch (Exception ex)
         {
-            StatusText = $"Repair failed: {ex.Message}";
+            StatusText = $"修复失败：{ex.Message}";
         }
     }
 
@@ -198,7 +196,7 @@ public partial class InspectorViewModel : ObservableObject
         // Guard so a late-arriving progress event doesn't re-start the spinner.
         if (!IsScanning) return;
 
-        FilesText = $"{p.FilesProcessed:N0} files";
+        FilesText = $"已处理 {p.FilesProcessed:N0} 个文件";
         CurrentFileText = string.IsNullOrEmpty(p.CurrentFile) ? null : Path.GetFileName(p.CurrentFile);
         IsProgressIndeterminate = true; // scanner reports count but no total
     }

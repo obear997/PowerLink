@@ -20,20 +20,20 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" Text="Settings" Style="{ThemeResource TitleTextBlockStyle}"/>
+            <TextBlock Grid.Row="0" Text="设置" Style="{ThemeResource TitleTextBlockStyle}"/>
 
             <Border Grid.Row="1" CornerRadius="8" Padding="20" BorderThickness="1"
                     BorderBrush="{ThemeResource ControlElevationBorderBrush}"
                     Background="{ThemeResource SubtleFillColorTransparentBrush}">
                 <StackPanel Spacing="12">
-                    <TextBlock Style="{ThemeResource SubtitleTextBlockStyle}" Text="Explorer context menu"/>
+                    <TextBlock Style="{ThemeResource SubtitleTextBlockStyle}" Text="资源管理器右键菜单"/>
                     <TextBlock TextWrapping="Wrap" Opacity="0.75"
-                               Text="Choose which PowerLink entries to add to the right-click menu. Verbs cover NTFS hardlinks (one file, multiple names — not copies) and directory junctions (folder pointers — no admin needed). Per-user registry, no admin. On Windows 11 these appear under 'Show more options'."/>
+                               Text="选择要加入右键菜单的 PowerLink 条目。动作涵盖 NTFS 硬链接（一个文件多个名字 —— 不是复制）和目录联接（文件夹指针 —— 无需管理员）。按用户写注册表，无需管理员。在 Windows 11 上这些条目会出现在“显示更多选项”中。"/>
 
                     <ToggleSwitch IsOn="{x:Bind ViewModel.GroupedLayout, Mode=TwoWay}"
-                                  Header="Group under a single 'PowerLink' submenu"
-                                  OffContent="Flat — each verb is its own top-level entry"
-                                  OnContent="Grouped — one 'PowerLink' item that cascades into the selected verbs"/>
+                                  Header="归入单一的 “PowerLink” 子菜单"
+                                  OffContent="平铺 —— 每个动作都是独立的顶层条目"
+                                  OnContent="分组 —— 一个 “PowerLink” 条目级联出所选动作"/>
 
                     <ItemsControl ItemsSource="{x:Bind ViewModel.Verbs, Mode=OneWay}">
                         <ItemsControl.ItemTemplate>
@@ -71,20 +71,20 @@
                                 Style="{ThemeResource AccentButtonStyle}">
                             <StackPanel Orientation="Horizontal" Spacing="6">
                                 <SymbolIcon Symbol="Accept"/>
-                                <TextBlock Text="Apply changes"/>
+                                <TextBlock Text="应用更改"/>
                             </StackPanel>
                         </Button>
                         <Button Command="{x:Bind ViewModel.UninstallAllCommand}">
                             <StackPanel Orientation="Horizontal" Spacing="6">
                                 <SymbolIcon Symbol="Delete"/>
-                                <TextBlock Text="Uninstall all"/>
+                                <TextBlock Text="全部卸载"/>
                             </StackPanel>
                         </Button>
                         <Button Command="{x:Bind ViewModel.RestartExplorerCommand}"
-                                ToolTipService.ToolTip="Restart explorer.exe so menu changes take effect">
+                                ToolTipService.ToolTip="重启 explorer.exe 使菜单更改生效">
                             <StackPanel Orientation="Horizontal" Spacing="6">
                                 <SymbolIcon Symbol="Refresh"/>
-                                <TextBlock Text="Restart Explorer"/>
+                                <TextBlock Text="重启资源管理器"/>
                             </StackPanel>
                         </Button>
                     </StackPanel>
@@ -93,11 +93,11 @@
                                Opacity="0.8" TextWrapping="Wrap"/>
 
                     <StackPanel Spacing="2" Margin="0,4,0,0">
-                        <TextBlock Text="CLI path:" FontWeight="SemiBold" Opacity="0.7"/>
+                        <TextBlock Text="CLI 路径：" FontWeight="SemiBold" Opacity="0.7"/>
                         <TextBlock Text="{x:Bind ViewModel.CliPath, Mode=OneWay}"
                                    FontFamily="Consolas" Opacity="0.7"
                                    TextWrapping="Wrap" FontSize="11"/>
-                        <TextBlock Text="App path:" FontWeight="SemiBold" Opacity="0.7" Margin="0,4,0,0"/>
+                        <TextBlock Text="应用路径：" FontWeight="SemiBold" Opacity="0.7" Margin="0,4,0,0"/>
                         <TextBlock Text="{x:Bind ViewModel.AppPath, Mode=OneWay}"
                                    FontFamily="Consolas" Opacity="0.7"
                                    TextWrapping="Wrap" FontSize="11"/>
@@ -109,9 +109,9 @@
                     BorderBrush="{ThemeResource ControlElevationBorderBrush}"
                     Background="{ThemeResource SubtleFillColorTransparentBrush}">
                 <StackPanel Spacing="12">
-                    <TextBlock Style="{ThemeResource SubtitleTextBlockStyle}" Text="Drag-and-drop actions"/>
+                    <TextBlock Style="{ThemeResource SubtitleTextBlockStyle}" Text="拖放操作"/>
                     <TextBlock TextWrapping="Wrap" Opacity="0.75"
-                               Text="Right-drag files or folders onto a folder and pick a PowerLink action from the menu. One DLL exposes 'Hardlink here' (for files), 'Clone tree here' (for folders), and 'Junction here pointing at source' (for folders). Per-user HKCU — no admin."/>
+                               Text="右键拖动文件或文件夹到某个文件夹上，再从菜单中选择 PowerLink 动作。一个 DLL 提供 “在此创建硬链接”（针对文件）、“在此克隆目录树（硬链接）”（针对文件夹）和 “在此创建目录联接”（针对文件夹）。按用户写 HKCU —— 无需管理员。"/>
 
                     <ItemsControl ItemsSource="{x:Bind ViewModel.DropVerbs, Mode=OneWay}">
                         <ItemsControl.ItemTemplate>
@@ -149,14 +149,14 @@
                                 Style="{ThemeResource AccentButtonStyle}">
                             <StackPanel Orientation="Horizontal" Spacing="6">
                                 <SymbolIcon Symbol="Accept"/>
-                                <TextBlock Text="Apply changes"/>
+                                <TextBlock Text="应用更改"/>
                             </StackPanel>
                         </Button>
                         <Button Command="{x:Bind ViewModel.RestartExplorerCommand}"
-                                ToolTipService.ToolTip="Restart explorer.exe so drop-handler changes take effect">
+                                ToolTipService.ToolTip="重启 explorer.exe 使拖放处理程序更改生效">
                             <StackPanel Orientation="Horizontal" Spacing="6">
                                 <SymbolIcon Symbol="Refresh"/>
-                                <TextBlock Text="Restart Explorer"/>
+                                <TextBlock Text="重启资源管理器"/>
                             </StackPanel>
                         </Button>
                     </StackPanel>
@@ -170,14 +170,14 @@
                     BorderBrush="{ThemeResource ControlElevationBorderBrush}"
                     Background="{ThemeResource SubtleFillColorTransparentBrush}">
                 <StackPanel Spacing="12">
-                    <TextBlock Style="{ThemeResource SubtitleTextBlockStyle}" Text="Windows 11 modern menu (experimental)"/>
+                    <TextBlock Style="{ThemeResource SubtitleTextBlockStyle}" Text="Windows 11 现代菜单（实验性）"/>
                     <TextBlock TextWrapping="Wrap" Opacity="0.75"
-                               Text="Adds a 'PowerLink' submenu to the TOP section of the Win11 right-click menu (no 'Show more options' needed). Registers a sparse MSIX package pointing at this app's folder — no signing. Requires Windows Developer Mode (Settings → Privacy &amp; security → For developers)."/>
+                               Text="在 Win11 右键菜单的顶部区域添加 “PowerLink” 子菜单（无需“显示更多选项”）。注册一个指向本应用文件夹的稀疏 MSIX 包 —— 无需签名。需要 Windows 开发者模式（设置 → 隐私和安全性 → 开发者选项）。"/>
 
                     <InfoBar IsOpen="True"
                              Severity="Warning"
                              IsClosable="False"
-                             Title="Requirements not met"
+                             Title="不满足要求"
                              Message="{x:Bind ViewModel.ModernRequirementsWarning, Mode=OneWay}"
                              Visibility="{x:Bind ViewModel.ModernRequirementsVisibility, Mode=OneWay}"/>
 
@@ -215,17 +215,17 @@
                     <StackPanel Orientation="Horizontal" Spacing="12">
                         <Button Command="{x:Bind ViewModel.ApplyModernChangesCommand}"
                                 Style="{ThemeResource AccentButtonStyle}"
-                                ToolTipService.ToolTip="Registers/unregisters the AppX layout package via PackageManager. Windows Developer Mode must be on.">
+                                ToolTipService.ToolTip="通过 PackageManager 注册/注销 AppX 布局包。必须开启 Windows 开发者模式。">
                             <StackPanel Orientation="Horizontal" Spacing="6">
                                 <SymbolIcon Symbol="Accept"/>
-                                <TextBlock Text="Apply changes"/>
+                                <TextBlock Text="应用更改"/>
                             </StackPanel>
                         </Button>
                         <Button Command="{x:Bind ViewModel.RestartExplorerCommand}"
-                                ToolTipService.ToolTip="Restart explorer.exe so the new menu entry appears">
+                                ToolTipService.ToolTip="重启 explorer.exe 使新的菜单条目出现">
                             <StackPanel Orientation="Horizontal" Spacing="6">
                                 <SymbolIcon Symbol="Refresh"/>
-                                <TextBlock Text="Restart Explorer"/>
+                                <TextBlock Text="重启资源管理器"/>
                             </StackPanel>
                         </Button>
                     </StackPanel>
@@ -239,9 +239,9 @@
                     BorderBrush="{ThemeResource ControlElevationBorderBrush}"
                     Background="{ThemeResource SubtleFillColorTransparentBrush}">
                 <StackPanel Spacing="12">
-                    <TextBlock Style="{ThemeResource SubtitleTextBlockStyle}" Text="Overlay icons"/>
+                    <TextBlock Style="{ThemeResource SubtitleTextBlockStyle}" Text="叠加图标"/>
                     <TextBlock TextWrapping="Wrap" Opacity="0.75"
-                               Text="Small badge on file icons in Explorer for files that are hardlinks (have 2+ names on disk). Requires admin to install — Windows reads overlay handlers only from HKLM, not per-user. Uses 1 of 15 system-wide overlay slots."/>
+                               Text="在资源管理器中为硬链接文件（磁盘上有 2 个及以上名字）的图标显示一个小角标。安装需要管理员权限 —— Windows 只从 HKLM 读取叠加处理程序，不支持按用户。会占用 15 个系统级叠加槽位中的 1 个。"/>
 
                     <ItemsControl ItemsSource="{x:Bind ViewModel.OverlayVerbs, Mode=OneWay}">
                         <ItemsControl.ItemTemplate>
@@ -277,24 +277,24 @@
                     <StackPanel Orientation="Horizontal" Spacing="12">
                         <Button Command="{x:Bind ViewModel.ApplyOverlayChangesCommand}"
                                 Style="{ThemeResource AccentButtonStyle}"
-                                ToolTipService.ToolTip="Triggers UAC — overlay handlers register in HKLM">
+                                ToolTipService.ToolTip="会触发 UAC —— 叠加处理程序注册在 HKLM 中">
                             <StackPanel Orientation="Horizontal" Spacing="6">
                                 <SymbolIcon Symbol="Permissions"/>
-                                <TextBlock Text="Apply (requires admin)"/>
+                                <TextBlock Text="应用（需要管理员）"/>
                             </StackPanel>
                         </Button>
                         <Button Command="{x:Bind ViewModel.RestartExplorerCommand}"
-                                ToolTipService.ToolTip="Restart explorer.exe so the badge appears or disappears">
+                                ToolTipService.ToolTip="重启 explorer.exe 使角标出现或消失">
                             <StackPanel Orientation="Horizontal" Spacing="6">
                                 <SymbolIcon Symbol="Refresh"/>
-                                <TextBlock Text="Restart Explorer"/>
+                                <TextBlock Text="重启资源管理器"/>
                             </StackPanel>
                         </Button>
                         <Button Command="{x:Bind ViewModel.ClearIconCacheCommand}"
-                                ToolTipService.ToolTip="Wipe Explorer's icon cache (iconcache_*.db) and restart explorer.exe. Use after rebuilding the overlay DLL — Windows otherwise keeps showing old badges. First folder open will be slower as the cache rebuilds.">
+                                ToolTipService.ToolTip="清空资源管理器的图标缓存（iconcache_*.db）并重启 explorer.exe。重新构建叠加 DLL 后使用 —— 否则 Windows 会一直显示旧角标。缓存重建后首次打开文件夹会稍慢。">
                             <StackPanel Orientation="Horizontal" Spacing="6">
                                 <SymbolIcon Symbol="Delete"/>
-                                <TextBlock Text="Clear icon cache"/>
+                                <TextBlock Text="清除图标缓存"/>
                             </StackPanel>
                         </Button>
                     </StackPanel>
@@ -313,24 +313,24 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Style="{ThemeResource SubtitleTextBlockStyle}" Text="Currently picked source"/>
+                        <TextBlock Style="{ThemeResource SubtitleTextBlockStyle}" Text="当前选取的源"/>
                         <Button Grid.Column="1"
                                 Command="{x:Bind ViewModel.RefreshPickedCommand}"
                                 Background="Transparent" BorderBrush="Transparent"
-                                ToolTipService.ToolTip="Refresh">
+                                ToolTipService.ToolTip="刷新">
                             <SymbolIcon Symbol="Refresh"/>
                         </Button>
                     </Grid>
                     <TextBlock Text="{x:Bind ViewModel.PickedPathText, Mode=OneWay}"
                                TextWrapping="Wrap" FontFamily="Consolas"
                                Visibility="{x:Bind ViewModel.PickedVisibility, Mode=OneWay}"/>
-                    <TextBlock Text="Nothing picked yet. Right-click a file or folder in Explorer and choose 'PowerLink: Pick as link source'."
+                    <TextBlock Text="尚未选取任何内容。在资源管理器中右键单击文件或文件夹，选择 “PowerLink: Pick as link source”。"
                                TextWrapping="Wrap" Opacity="0.6"
                                Visibility="{x:Bind ViewModel.NoPickVisibility, Mode=OneWay}"/>
                     <Button Command="{x:Bind ViewModel.ClearPickCommand}" HorizontalAlignment="Left">
                         <StackPanel Orientation="Horizontal" Spacing="6">
                             <SymbolIcon Symbol="Clear"/>
-                            <TextBlock Text="Clear pick"/>
+                            <TextBlock Text="清除选取"/>
                         </StackPanel>
                     </Button>
                 </StackPanel>
@@ -340,10 +340,10 @@
                     BorderBrush="{ThemeResource ControlElevationBorderBrush}"
                     Background="{ThemeResource SubtleFillColorTransparentBrush}">
                 <StackPanel Spacing="12">
-                    <TextBlock Style="{ThemeResource SubtitleTextBlockStyle}" Text="Updates"/>
+                    <TextBlock Style="{ThemeResource SubtitleTextBlockStyle}" Text="更新"/>
                     <StackPanel Spacing="2">
                         <TextBlock>
-                            <Run Text="Current version: v"/><Run Text="{x:Bind ViewModel.CurrentVersionText, Mode=OneWay}"/>
+                            <Run Text="当前版本：v"/><Run Text="{x:Bind ViewModel.CurrentVersionText, Mode=OneWay}"/>
                         </TextBlock>
                         <TextBlock Text="{x:Bind ViewModel.UpdateModeText, Mode=OneWay}"
                                    Opacity="0.75" TextWrapping="Wrap"/>
@@ -357,20 +357,20 @@
                                 Style="{ThemeResource AccentButtonStyle}">
                             <StackPanel Orientation="Horizontal" Spacing="6">
                                 <SymbolIcon Symbol="Sync"/>
-                                <TextBlock Text="Check for updates"/>
+                                <TextBlock Text="检查更新"/>
                             </StackPanel>
                         </Button>
                         <Button Command="{x:Bind ViewModel.InstallUpdateCommand}"
                                 Visibility="{x:Bind ViewModel.InstallButtonVisibility, Mode=OneWay}">
                             <StackPanel Orientation="Horizontal" Spacing="6">
                                 <SymbolIcon Symbol="Download"/>
-                                <TextBlock Text="Install now"/>
+                                <TextBlock Text="立即安装"/>
                             </StackPanel>
                         </Button>
                         <Button Command="{x:Bind ViewModel.OpenReleasesPageCommand}">
                             <StackPanel Orientation="Horizontal" Spacing="6">
                                 <SymbolIcon Symbol="Link"/>
-                                <TextBlock Text="Open Releases page"/>
+                                <TextBlock Text="打开 Releases 页面"/>
                             </StackPanel>
                         </Button>
                     </StackPanel>
@@ -378,7 +378,7 @@
             </Border>
 
             <TextBlock Grid.Row="7" Opacity="0.5" FontSize="12"
-                       Text="Context menu verbs and drop handlers live under HKCU (per-user, no admin). Overlay handlers live under HKLM (admin required). After any change: restart Explorer once."/>
+                       Text="右键菜单动作和拖放处理程序位于 HKCU（按用户，无需管理员）。叠加处理程序位于 HKLM（需要管理员）。任何更改后：重启一次资源管理器。"/>
         </Grid>
     </ScrollViewer>
 </Page>

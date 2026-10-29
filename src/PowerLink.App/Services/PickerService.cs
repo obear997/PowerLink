@@ -32,7 +32,7 @@ public static class PickerService
 
     private static IntPtr GetMainWindowHandle()
     {
-        var window = App.MainAppWindow ?? throw new InvalidOperationException("Main window not initialized.");
+        var window = App.MainAppWindow ?? throw new InvalidOperationException("主窗口尚未初始化。");
         return WinRT.Interop.WindowNative.GetWindowHandle(window);
     }
 }

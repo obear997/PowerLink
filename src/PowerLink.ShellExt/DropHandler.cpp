@@ -9,9 +9,9 @@ namespace
     constexpr UINT CMD_JUNCTION = 2;
 
     // Reused status-bar / accessibility strings.
-    constexpr wchar_t HelpHardlink[] = L"Create NTFS hardlinks here — no extra disk space, same volume only.";
-    constexpr wchar_t HelpClone[]    = L"Clone the folder tree here as hardlinks — same volume only.";
-    constexpr wchar_t HelpJunction[] = L"Create a junction here pointing at the dragged folder — no admin required, cross-volume OK.";
+    constexpr wchar_t HelpHardlink[] = L"在此创建 NTFS 硬链接 —— 不额外占用磁盘，仅限同一卷。";
+    constexpr wchar_t HelpClone[]    = L"在此把文件夹树克隆为硬链接 —— 仅限同一卷。";
+    constexpr wchar_t HelpJunction[] = L"在此创建指向拖入文件夹的目录联接 —— 无需管理员，可跨卷。";
 
     bool EqualVolumes(PCWSTR a, PCWSTR b)
     {
@@ -240,9 +240,9 @@ IFACEMETHODIMP PowerLinkDropHandler::QueryContextMenu(HMENU hMenu, UINT indexMen
     {
         WCHAR label[64];
         if (_sourceFiles.size() == 1)
-            StringCchCopyW(label, 64, L"Hardlink here");
+            StringCchCopyW(label, 64, L"在此创建硬链接");
         else
-            StringCchPrintfW(label, 64, L"Hardlink %zu files here", _sourceFiles.size());
+            StringCchPrintfW(label, 64, L"在此硬链接 %zu 个文件", _sourceFiles.size());
 
         InsertMenuW(childMenu, childPos++, MF_BYPOSITION | MF_STRING, idCmdFirst + CMD_HARDLINK, label);
         markUsed(CMD_HARDLINK);
@@ -253,9 +253,9 @@ IFACEMETHODIMP PowerLinkDropHandler::QueryContextMenu(HMENU hMenu, UINT indexMen
     {
         WCHAR label[64];
         if (_sourceDirs.size() == 1)
-            StringCchCopyW(label, 64, L"Clone tree here (hardlinks)");
+            StringCchCopyW(label, 64, L"在此克隆目录树（硬链接）");
         else
-            StringCchPrintfW(label, 64, L"Clone %zu trees here (hardlinks)", _sourceDirs.size());
+            StringCchPrintfW(label, 64, L"在此克隆 %zu 棵目录树（硬链接）", _sourceDirs.size());
 
         InsertMenuW(childMenu, childPos++, MF_BYPOSITION | MF_STRING, idCmdFirst + CMD_CLONE, label);
         markUsed(CMD_CLONE);
@@ -266,9 +266,9 @@ IFACEMETHODIMP PowerLinkDropHandler::QueryContextMenu(HMENU hMenu, UINT indexMen
     {
         WCHAR label[64];
         if (_sourceDirs.size() == 1)
-            StringCchCopyW(label, 64, L"Junction here");
+            StringCchCopyW(label, 64, L"在此创建目录联接");
         else
-            StringCchPrintfW(label, 64, L"Junction here (%zu sources)", _sourceDirs.size());
+            StringCchPrintfW(label, 64, L"在此创建目录联接（%zu 个源）", _sourceDirs.size());
 
         InsertMenuW(childMenu, childPos++, MF_BYPOSITION | MF_STRING, idCmdFirst + CMD_JUNCTION, label);
         markUsed(CMD_JUNCTION);
@@ -323,7 +323,7 @@ IFACEMETHODIMP PowerLinkDropHandler::InvokeCommand(CMINVOKECOMMANDINFO* pici)
     {
         if (_sourceFiles.empty())
         {
-            ReportError(hwnd, L"PowerLink: Hardlink here", L"No files in selection.");
+            ReportError(hwnd, L"PowerLink：在此创建硬链接", L"选择中没有文件。");
             return S_OK;
         }
 
@@ -333,7 +333,7 @@ IFACEMETHODIMP PowerLinkDropHandler::InvokeCommand(CMINVOKECOMMANDINFO* pici)
         {
             if (!EqualVolumes(src.c_str(), _targetFolder.c_str()))
             {
-                failures += L"\n  " + src + L"  (different volume — hardlinks can't cross volumes)";
+                failures += L"\n  " + src + L"  （不同卷 —— 硬链接不能跨卷）";
                 continue;
             }
 
@@ -343,7 +343,7 @@ IFACEMETHODIMP PowerLinkDropHandler::InvokeCommand(CMINVOKECOMMANDINFO* pici)
 
             if (GetFileAttributesW(linkPath.c_str()) != INVALID_FILE_ATTRIBUTES)
             {
-                failures += L"\n  " + linkPath + L"  (already exists)";
+                failures += L"\n  " + linkPath + L"  （已存在）";
                 continue;
             }
 
@@ -354,15 +354,15 @@ IFACEMETHODIMP PowerLinkDropHandler::InvokeCommand(CMINVOKECOMMANDINFO* pici)
             else
             {
                 WCHAR msg[256];
-                StringCchPrintfW(msg, 256, L"\n  %s  (error %lu)", src.c_str(), GetLastError());
+                StringCchPrintfW(msg, 256, L"\n  %s  （错误 %lu）", src.c_str(), GetLastError());
                 failures += msg;
             }
         }
 
         if (!failures.empty())
         {
-            std::wstring body = L"Hardlinks created: " + std::to_wstring(ok) + L"\nFailed:" + failures;
-            ReportError(hwnd, L"PowerLink: Hardlink here", body.c_str());
+            std::wstring body = L"已创建硬链接：" + std::to_wstring(ok) + L"\n失败：" + failures;
+            ReportError(hwnd, L"PowerLink：在此创建硬链接", body.c_str());
         }
         // no message on full success — shell-level operation should be quiet like Copy/Move
         return S_OK;
@@ -374,7 +374,7 @@ IFACEMETHODIMP PowerLinkDropHandler::InvokeCommand(CMINVOKECOMMANDINFO* pici)
         if (_sourceDirs.empty())
         {
             DebugLog(L"    no source dirs");
-            ReportError(hwnd, L"PowerLink: Clone tree here", L"No folders in selection.");
+            ReportError(hwnd, L"PowerLink：在此克隆目录树", L"选择中没有文件夹。");
             return S_OK;
         }
 
@@ -385,8 +385,8 @@ IFACEMETHODIMP PowerLinkDropHandler::InvokeCommand(CMINVOKECOMMANDINFO* pici)
         if (cli.empty() || cliAttrs == INVALID_FILE_ATTRIBUTES)
         {
             DebugLog(L"    -> cli not found, returning");
-            ReportError(hwnd, L"PowerLink: Clone tree here",
-                L"PowerLink.Cli.exe not found next to the shell extension DLL.");
+            ReportError(hwnd, L"PowerLink：在此克隆目录树",
+                L"在 shell 扩展 DLL 旁边未找到 PowerLink.Cli.exe。");
             return S_OK;
         }
 
@@ -424,7 +424,7 @@ IFACEMETHODIMP PowerLinkDropHandler::InvokeCommand(CMINVOKECOMMANDINFO* pici)
 
         DebugLog(L"    launched=" + std::to_wstring(launched));
         if (launched == 0)
-            ReportError(hwnd, L"PowerLink: Clone tree here", L"Failed to launch PowerLink.Cli.");
+            ReportError(hwnd, L"PowerLink：在此克隆目录树", L"无法启动 PowerLink.Cli。");
         return S_OK;
     }
 
@@ -434,7 +434,7 @@ IFACEMETHODIMP PowerLinkDropHandler::InvokeCommand(CMINVOKECOMMANDINFO* pici)
         if (_sourceDirs.empty())
         {
             DebugLog(L"    no source dirs");
-            ReportError(hwnd, L"PowerLink: Junction here", L"No folders in selection.");
+            ReportError(hwnd, L"PowerLink：在此创建目录联接", L"选择中没有文件夹。");
             return S_OK;
         }
 
@@ -444,8 +444,8 @@ IFACEMETHODIMP PowerLinkDropHandler::InvokeCommand(CMINVOKECOMMANDINFO* pici)
         if (cli.empty() || cliAttrs == INVALID_FILE_ATTRIBUTES)
         {
             DebugLog(L"    -> cli not found, returning");
-            ReportError(hwnd, L"PowerLink: Junction here",
-                L"PowerLink.Cli.exe not found next to the shell extension DLL.");
+            ReportError(hwnd, L"PowerLink：在此创建目录联接",
+                L"在 shell 扩展 DLL 旁边未找到 PowerLink.Cli.exe。");
             return S_OK;
         }
 
@@ -485,7 +485,7 @@ IFACEMETHODIMP PowerLinkDropHandler::InvokeCommand(CMINVOKECOMMANDINFO* pici)
 
         DebugLog(L"    launched=" + std::to_wstring(launched));
         if (launched == 0)
-            ReportError(hwnd, L"PowerLink: Junction here", L"Failed to launch PowerLink.Cli.");
+            ReportError(hwnd, L"PowerLink：在此创建目录联接", L"无法启动 PowerLink.Cli。");
         return S_OK;
     }
 

@@ -14,27 +14,27 @@
                     Background="Transparent"
                     SelectionChanged="Nav_SelectionChanged">
         <NavigationView.MenuItems>
-            <NavigationViewItem Content="Deduplicate" Tag="dedup" IsSelected="True">
+            <NavigationViewItem Content="去重" Tag="dedup" IsSelected="True">
                 <NavigationViewItem.Icon>
                     <SymbolIcon Symbol="Copy"/>
                 </NavigationViewItem.Icon>
             </NavigationViewItem>
-            <NavigationViewItem Content="Clone" Tag="clone">
+            <NavigationViewItem Content="克隆" Tag="clone">
                 <NavigationViewItem.Icon>
                     <SymbolIcon Symbol="Folder"/>
                 </NavigationViewItem.Icon>
             </NavigationViewItem>
-            <NavigationViewItem Content="Junction" Tag="junction">
+            <NavigationViewItem Content="目录联接" Tag="junction">
                 <NavigationViewItem.Icon>
                     <SymbolIcon Symbol="Link"/>
                 </NavigationViewItem.Icon>
             </NavigationViewItem>
-            <NavigationViewItem Content="Inspector" Tag="inspector">
+            <NavigationViewItem Content="检查器" Tag="inspector">
                 <NavigationViewItem.Icon>
                     <SymbolIcon Symbol="Find"/>
                 </NavigationViewItem.Icon>
             </NavigationViewItem>
-            <NavigationViewItem Content="Settings" Tag="settings">
+            <NavigationViewItem Content="设置" Tag="settings">
                 <NavigationViewItem.Icon>
                     <SymbolIcon Symbol="Setting"/>
                 </NavigationViewItem.Icon>
@@ -43,10 +43,10 @@
 
         <NavigationView.FooterMenuItems>
             <NavigationViewItem x:Name="ThemeToggleItem"
-                                Content="Dark mode"
+                                Content="深色模式"
                                 SelectsOnInvoked="False"
                                 Tapped="ThemeToggleItem_Tapped"
-                                ToolTipService.ToolTip="Toggle light / dark theme">
+                                ToolTipService.ToolTip="切换浅色 / 深色主题">
                 <NavigationViewItem.Icon>
                     <FontIcon x:Name="ThemeToggleIcon"
                               FontFamily="{StaticResource SymbolThemeFontFamily}"

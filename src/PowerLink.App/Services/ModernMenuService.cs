@@ -80,7 +80,7 @@ public static class ModernMenuService
     {
         var manifest = DetectManifestPath();
         if (!File.Exists(manifest))
-            throw new FileNotFoundException("AppxManifest.xml not found.", manifest);
+            throw new FileNotFoundException("未找到 AppxManifest.xml。", manifest);
 
         var pm = new PackageManager();
         var op = pm.RegisterPackageAsync(
@@ -92,7 +92,7 @@ public static class ModernMenuService
         if (result.IsRegistered) return;
 
         throw new InvalidOperationException(
-            $"Register failed: {result.ErrorText} (0x{result.ExtendedErrorCode.HResult:X8})");
+            $"注册失败：{result.ErrorText} (0x{result.ExtendedErrorCode.HResult:X8})");
     }
 
     public static async Task UninstallAsync()
@@ -113,6 +113,6 @@ public static class ModernMenuService
         var result = await op.AsTask();
         if (!string.IsNullOrEmpty(result.ErrorText))
             throw new InvalidOperationException(
-                $"Remove failed: {result.ErrorText} (0x{result.ExtendedErrorCode.HResult:X8})");
+                $"移除失败：{result.ErrorText} (0x{result.ExtendedErrorCode.HResult:X8})");
     }
 }
