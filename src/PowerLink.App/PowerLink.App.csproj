@@ -78,7 +78,11 @@
     <_ShellExtDll>..\PowerLink.ShellExt\$(Platform)\$(Configuration)\PowerLink.ShellExt.dll</_ShellExtDll>
   </PropertyGroup>
 
-  <Target Name="BuildShellExt" BeforeTargets="BeforeBuild">
+  <!-- Pass -p:SkipShellExt=true to build the app without the C++ shell
+       extension (no VS C++ toolchain installed). The app then runs with
+       Explorer integration reported as unavailable. -->
+  <Target Name="BuildShellExt" BeforeTargets="BeforeBuild"
+          Condition="'$(SkipShellExt)' != 'true'">
     <!-- dotnet CLI's MSBuild can't load .vcxproj (no C++ targets), so we
          explicitly find VS's MSBuild via vswhere and shell out to it.
          VS solution build picks up the same target without harm. The vcxproj

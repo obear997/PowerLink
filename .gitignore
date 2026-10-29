@@ -68,6 +68,9 @@ project.lock.json
 project.fragment.lock.json
 artifacts/
 
+# Velopack pack output (vpk pack --outputDir velopack-output)
+velopack-output/
+
 # Tye
 .tye/
 
