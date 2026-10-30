@@ -71,6 +71,9 @@ artifacts/
 # Velopack pack output (vpk pack --outputDir velopack-output)
 velopack-output/
 
+# Locally installed dotnet tools (vpk --tool-path .tools)
+.tools/
+
 # Tye
 .tye/
 
