@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -19,6 +20,7 @@ public sealed partial class MainWindow : Window
         InitializeComponent();
         Title = "PowerLink";
         SetWindowIcon();
+        SetWindowSize();
         SetMicaBackdrop();
         NavigateInitialPage();
     }
@@ -83,6 +85,107 @@ public sealed partial class MainWindow : Window
             // Non-fatal — fall back to default icon.
         }
     }
+
+    // Minimum logical window size. The window opens at exactly this size and
+    // can grow freely, but WM_GETMINMAXINFO stops the user from dragging it
+    // any smaller. AppWindow sizes are physical pixels, so every use below
+    // multiplies by the window's DPI scale — otherwise the limit would be
+    // wrong on 125%/150%/200% displays.
+    private const int MinWindowWidth = 1200;
+    private const int MinWindowHeight = 800;
+
+    private void SetWindowSize()
+    {
+        try
+        {
+            var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+            var windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hwnd);
+            var appWindow = AppWindow.GetFromWindowId(windowId);
+
+            var scale = GetDpiForWindow(hwnd) / 96.0;
+            appWindow.Resize(new Windows.Graphics.SizeInt32(
+                (int)(MinWindowWidth * scale),
+                (int)(MinWindowHeight * scale)));
+
+            // AppWindow has no MinWidth/MinHeight, so enforce the floor at the
+            // Win32 level instead.
+            SetWindowSubclass(hwnd, MinSizeSubclassProc, MinSizeSubclassId, IntPtr.Zero);
+        }
+        catch
+        {
+            // Non-fatal — fall back to the system default size and no floor.
+        }
+    }
+
+    // Held in a static field so the delegate isn't collected while the window
+    // still points at it.
+    private static readonly SubclassProc MinSizeSubclassProc = OnMinSizeMessage;
+    private static readonly IntPtr MinSizeSubclassId = 1;
+
+    private static IntPtr OnMinSizeMessage(
+        IntPtr hWnd, uint uMsg, IntPtr wParam, IntPtr lParam, IntPtr uIdSubclass, IntPtr dwRefData)
+    {
+        if (uMsg == WM_NCDESTROY)
+        {
+            // Standard cleanup for SetWindowSubclass.
+            RemoveWindowSubclass(hWnd, MinSizeSubclassProc, uIdSubclass);
+            return DefSubclassProc(hWnd, uMsg, wParam, lParam);
+        }
+
+        var result = DefSubclassProc(hWnd, uMsg, wParam, lParam);
+
+        // Apply the floor *after* the rest of the chain ran: DefWindowProc
+        // fills in its own defaults for MINMAXINFO, so setting it beforehand
+        // would get overwritten.
+        if (uMsg == WM_GETMINMAXINFO)
+        {
+            var info = Marshal.PtrToStructure<MINMAXINFO>(lParam);
+            var scale = GetDpiForWindow(hWnd) / 96.0;
+            info.ptMinTrackSize.X = (int)(MinWindowWidth * scale);
+            info.ptMinTrackSize.Y = (int)(MinWindowHeight * scale);
+            Marshal.StructureToPtr(info, lParam, false);
+        }
+
+        return result;
+    }
+
+    private const uint WM_GETMINMAXINFO = 0x0024;
+    private const uint WM_NCDESTROY = 0x0082;
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct POINT
+    {
+        public int X;
+        public int Y;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct MINMAXINFO
+    {
+        public POINT ptReserved;
+        public POINT ptMaxSize;
+        public POINT ptMaxPosition;
+        public POINT ptMinTrackSize;
+        public POINT ptMaxTrackSize;
+    }
+
+    [UnmanagedFunctionPointer(CallingConvention.Winapi)]
+    private delegate IntPtr SubclassProc(
+        IntPtr hWnd, uint uMsg, IntPtr wParam, IntPtr lParam, IntPtr uIdSubclass, IntPtr dwRefData);
+
+    [DllImport("comctl32.dll", SetLastError = true)]
+    private static extern bool SetWindowSubclass(
+        IntPtr hWnd, SubclassProc pfnSubclass, IntPtr uIdSubclass, IntPtr dwRefData);
+
+    [DllImport("comctl32.dll")]
+    private static extern bool RemoveWindowSubclass(
+        IntPtr hWnd, SubclassProc pfnSubclass, IntPtr uIdSubclass);
+
+    [DllImport("comctl32.dll")]
+    private static extern IntPtr DefSubclassProc(IntPtr hWnd, uint uMsg, IntPtr wParam, IntPtr lParam);
+
+    [DllImport("user32.dll")]
+    private static extern uint GetDpiForWindow(IntPtr hwnd);
 
     private void Nav_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
     {
