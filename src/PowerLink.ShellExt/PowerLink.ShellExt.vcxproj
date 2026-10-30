@@ -68,6 +68,11 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <!-- Sources are UTF-8 without BOM and contain Chinese literals. Without
+           /utf-8 MSVC falls back to the system ANSI codepage, so on a
+           CP936 (Chinese) machine the multi-byte sequences swallow the closing
+           quote and the build dies with C2001 "newline in constant". -->
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>_WINDOWS;_USRDLL;POWERLINK_SHELLEXT_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
