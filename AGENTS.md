@@ -108,7 +108,7 @@ msbuild tests/PowerLink.ShellExt.Tests/PowerLink.ShellExt.Tests.vcxproj -p:Confi
 
 ## 发布流程
 
-1. tag 用 `v*`（如 `v0.1.0`），推送到 `origin/main`，Gitea Actions `release.yml` 自动：装 .NET 8 → 构建 + 跑 ShellExt 测试 → `dotnet publish` App 与 Cli → Velopack 打包（默认全量包）→ 通过 Gitea REST API 创建 release 并上传 `Setup.exe` / `Portable.zip` / `.nupkg` / `releases.win.json` / `assets.win.json`。
+1. tag 用 `v*`（如 `v0.0.1`），推送到 `origin/main`，Gitea Actions `release.yml` 自动：装 .NET 9 SDK → 构建 + 跑 ShellExt 测试 → `dotnet publish` App 与 Cli → Velopack 打包（默认全量包）→ 通过 Gitea REST API 创建 release 并上传 `Setup.exe` / `Portable.zip` / `.nupkg` / `releases.win.json` / `assets.win.json`。
 2. 发布说明从 `CHANGELOG.md` 中按版本号自动摘取对应 `##` 小节。
 3. 打 tag 前先在 `CHANGELOG.md` 更新相应版本条目。
 4. 运行器标签 `windows-latest` 需与自建 Gitea runner 的标签一致；自动令牌走 `secrets.GITHUB_TOKEN`（act_runner 注入）。

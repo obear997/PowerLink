@@ -6,6 +6,9 @@
 # Claude Code local state (per-user settings, agent worktrees, etc.)
 .claude/
 
+# oh-my-claudecode local state (project memory, session traces, HUD state)
+.omc/
+
 # dotenv files
 .env
 
